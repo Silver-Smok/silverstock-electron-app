@@ -199,7 +199,11 @@ function createWindow() {
     },
   };
   homeWindow = new BrowserWindow(options);
-  homeWindow.loadURL("https://app.silver-smok.com/");
+  homeWindow.loadURL(
+    process.env.NODE_ENV === "development"
+      ? "http://127.0.0.1:3000"
+      : "https://app.silver-smok.com/"
+  );
 
   homeWindow.on("show", function () {
     mainWindowState.manage(homeWindow);
