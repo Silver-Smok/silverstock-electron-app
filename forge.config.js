@@ -41,7 +41,7 @@ module.exports = {
           owner: 'Silver-Smok',
           name: 'SilverStock'
         },
-        prerelease: true
+        prerelease: false
       }
     }
   ],

@@ -27,5 +27,9 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "5.0.3",
     "update-electron-app": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Silver-Smok/silverstock-electron-app.git"
   }
 }
