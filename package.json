@@ -1,49 +1,30 @@
 {
-  "name": "SilverStock",
+  "name": "silverstock-electron-app",
   "version": "0.9.11",
-  "description": "SilverStock",
+  "description": "SilverStock electron app",
   "main": "main.js",
   "scripts": {
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder --mac --win --ia32 --x64",
-    "distmac": "electron-builder --mac",
-    "dist32": "electron-builder --win --ia32",
-    "dist64": "electron-builder --win --x64",
-    "distlinux": "electron-builder --linux",
-    "build": "./build.sh",
-    "dev": "electron ."
+    "dev": "NODE_ENV=development electron .",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make --arch=universal --platform=darwin && electron-forge make --platform=win32 --arch=x64"
   },
   "author": "Julien Duizabo",
   "license": "CC0-1.0",
   "homepage": "https://app.silver-smok.com",
   "devDependencies": {
-    "electron": "^17",
-    "electron-builder": "23.0.3",
-    "electron-packager": "15.5.1"
+    "@electron-forge/cli": "7.2.0",
+    "@electron-forge/maker-deb": "7.2.0",
+    "@electron-forge/maker-dmg": "7.2.0",
+    "@electron-forge/maker-rpm": "7.2.0",
+    "@electron-forge/maker-squirrel": "7.2.0",
+    "@electron-forge/maker-zip": "7.2.0",
+    "@electron-forge/plugin-auto-unpack-natives": "7.2.0",
+    "electron": "17.4.11"
   },
   "dependencies": {
-    "electron-context-menu": "3.1.2",
-    "electron-osx-sign": "0.6.0",
+    "electron-context-menu": "3.6.1",
+    "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "5.0.3"
-  },
-  "build": {
-    "appId": "com.silver-stock",
-    "mac": {
-      "category": "public.app-category.business",
-      "hardenedRuntime": true,
-      "gatekeeperAssess": false,
-      "type": "distribution",
-      "icon": "logo.icns"
-    },
-    "dmg": {
-      "backgroundColor": "#fafafa",
-      "iconSize": "100",
-      "title": "${productName}",
-      "sign": false
-    },
-    "afterSign": "notarize.js",
-    "win": {
-      "icon": "logo.ico"
-    }
   }
 }

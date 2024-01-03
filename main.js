@@ -9,6 +9,8 @@ let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
 
+
+
 function createWindow() {
   const template = [
     {
@@ -199,7 +201,11 @@ function createWindow() {
     },
   };
   homeWindow = new BrowserWindow(options);
-  homeWindow.loadURL("https://app.silver-smok.com/");
+  homeWindow.loadURL(
+    process.env.NODE_ENV === "development"
+      ? "http://127.0.0.1:3006"
+      : "https://app.silver-smok.com/"
+  );
 
   homeWindow.on("show", function () {
     mainWindowState.manage(homeWindow);
@@ -211,6 +217,13 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", createWindow);
+app.on("ready", function() {
+  session.defaultSession.clearCache(null, () => {
+    app.relaunch();
+    app.exit();
+  });
+})
+
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
@@ -236,8 +249,12 @@ ipcMain.on("setBadgeCount", (event, count) => {
   }
 });
 
+
 ipcMain.on("getBadgeCount", () => {
   if (isDarwin) {
     homeWindow.webContents.send("badgeCount", app.getBadgeCount());
   }
 });
+
+
+
