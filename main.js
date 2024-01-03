@@ -5,6 +5,9 @@ const path = require("path");
 
 require("electron-context-menu");
 
+const { updateElectronApp } = require('update-electron-app');
+updateElectronApp();
+
 let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
