@@ -7,7 +7,7 @@
     "dev": "NODE_ENV=development electron .",
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make --arch=universal --platform=darwin && electron-forge make --platform=win32 --arch=x64"
+    "make": "source .env && electron-forge make --arch=universal --platform=darwin && electron-forge make --platform=win32 --arch=x64"
   },
   "author": "Julien Duizabo",
   "license": "CC0-1.0",
@@ -20,11 +20,17 @@
     "@electron-forge/maker-squirrel": "7.2.0",
     "@electron-forge/maker-zip": "7.2.0",
     "@electron-forge/plugin-auto-unpack-natives": "7.2.0",
+    "dotenv": "16.3.1",
     "electron": "17.4.11"
   },
   "dependencies": {
     "electron-context-menu": "3.6.1",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-window-state": "5.0.3"
+    "electron-window-state": "5.0.3",
+    "update-electron-app": "3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Silver-Smok/silverstock-electron-app.git"
   }
 }

@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
   packagerConfig: {
     asar: true,
@@ -32,6 +34,18 @@ module.exports = {
       name: "@electron-forge/maker-zip",
       config: {},
     },
+  ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'Silver-Smok',
+          name: 'SilverStock'
+        },
+        prerelease: false
+      }
+    }
   ],
   plugins: [
     {
