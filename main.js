@@ -5,8 +5,7 @@ const path = require("path");
 
 require("electron-context-menu");
 
-const { updateElectronApp } = require('update-electron-app');
-updateElectronApp();
+require('update-electron-app')()
 
 let homeWindow;
 let mainWindowState = null;
