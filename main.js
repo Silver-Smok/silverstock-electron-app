@@ -20,7 +20,7 @@ function createWindow() {
       label: "Édition",
       submenu: [
         {
-          label: "Couper / Cut",
+          label: "Couper",
           role: "cut",
         },
         {
