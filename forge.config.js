@@ -41,9 +41,10 @@ module.exports = {
       config: {
         repository: {
           owner: 'Silver-Smok',
-          name: 'SilverStock'
+          name: 'silverstock-electron-app'
         },
-        prerelease: false
+        prerelease: false,
+        draft: true
       }
     }
   ],
