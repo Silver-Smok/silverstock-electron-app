@@ -44,7 +44,7 @@ module.exports = {
           name: 'silverstock-electron-app'
         },
         prerelease: false,
-        draft: true
+        draft: false
       }
     }
   ],
