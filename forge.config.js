@@ -4,9 +4,9 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: "icons/logo",
-    osxSign: {
-      identity: process.env.APPLE_IDENTITY,
-    },
+    // osxSign: {
+    //   identity: process.env.APPLE_IDENTITY,
+    // },
     // osxNotarize: {
     //   tool: "notarytool",
     //   appleId: process.env.APPLE_ID,
