@@ -21,11 +21,18 @@ jobs:
 
       - run: npm ci
       
-      - name: Publish electron release
+      - name: Publish MacOS electron release
+        if: ${{ ${{ matrix.os }} == 'macos-latest' }}
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        run: node --version
+
+      - name: Publish Linux & Windows Electron release
+        if: ${{ ${{ matrix.os }} == 'ubuntu-latest' || ${{ matrix.os }} == 'windows-latest' }}
+        env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
         run: npm run publish
