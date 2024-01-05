@@ -6,6 +6,7 @@ module.exports = {
     icon: "icons/logo",
     osxSign: {
       identity: process.env.APPLE_IDENTITY,
+      continueOnError: false,
     },
     osxNotarize: {
       tool: "notarytool",

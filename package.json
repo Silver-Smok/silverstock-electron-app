@@ -23,7 +23,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "7.2.0",
     "@electron-forge/publisher-github": "7.2.0",
     "dotenv": "16.3.1",
-    "electron": "17.4.11"
+    "electron": "28.1.1"
   },
   "dependencies": {
     "electron-context-menu": "3.6.1",
