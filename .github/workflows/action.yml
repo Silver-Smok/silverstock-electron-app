@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-13-xlarge, ubuntu-latest, windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -23,7 +23,7 @@ jobs:
       - run: npm ci
 
       - name: Add MacOS Certificate
-        if: ${{ matrix.os == 'macos-latest' }}
+        if: ${{ matrix.os == 'macos-13-xlarge' }}
         run: |
           echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
           cat certificate_data.txt | base64 --decode > certificate.p12
