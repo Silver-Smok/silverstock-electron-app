@@ -33,7 +33,7 @@ jobs:
           && security create-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} silverstock.keychain
           && echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
           && base64 --decode certificate_data.txt > certificate.p12
-          && security import ./certificate.p12 -k silverstock.keychain -P ${{secrets.CERTIFICATE_PASSWORD }}
+          && security import ./certificate.p12 -k silverstock.keychain -P ${{secrets.KEYCHAIN_PASSWORD }}
 
       - name: Publish Linux & Windows Electron release
         if: ${{ matrix.os  == 'ubuntu-latest' || matrix.os == 'windows-latest' }}
