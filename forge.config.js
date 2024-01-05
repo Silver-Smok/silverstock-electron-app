@@ -4,7 +4,13 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: "icons/logo",
-    osxSign: {},
+    osxSign: {
+      optionsForFile: (filepath) => {
+        return {
+          entitlements: 'entitlements.plist'
+        }
+      }
+    },
     osxNotarize: {
       tool: "notarytool",
       appleId: process.env.APPLE_ID,
