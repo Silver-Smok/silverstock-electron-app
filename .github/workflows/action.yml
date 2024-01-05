@@ -21,20 +21,23 @@ jobs:
 
       - run: npm ci
       
-      - name: Add MacOS certificate
-        if: ${{ matrix.os == 'macos-latest' }}          
-        run:
-          stapler -v
-          echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
-          base64 --decode certificate_data.txt > certificate.p12
-          security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }}
-          security import $RUNNER_TEMP/certificate.p12 -P ${{ secrets.CERTIFICATE_PASSWORD }} -A -t cert -f pkcs12
-          
-      - name: Publish Electron release
+      - name: Publish MacOS release
+        if: ${{ matrix.os == 'macos-latest' }}
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GITHUB_TOKEN: ${{ secrets.github_token }}
+        run:
+          echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
+          base64 --decode certificate_data.txt > certificate.p12
+          security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }}
+          security import $RUNNER_TEMP/certificate.p12 -P ${{ secrets.CERTIFICATE_PASSWORD }} -A -t cert -f pkcs12
+          npm run publish
+          
+      - name: Publish Linux and Windows Electron release
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        if: ${{ matrix.os == 'ubuntu-latest' || matrix.os == 'windows-latest' }}  
         run: npm run publish
