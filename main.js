@@ -5,14 +5,23 @@ const path = require("path");
 
 require("electron-context-menu");
 
-const { updateElectronApp } = require('update-electron-app');
-updateElectronApp();
-
 let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
 
+const log = require("electron-log/main");
 
+log.initialize();
+
+log.info("Log from the main process");
+
+require("electron-context-menu");
+
+const { updateElectronApp } = require("update-electron-app");
+updateElectronApp({
+  logger: log,
+  notifyUser: true,
+});
 
 function createWindow() {
   const template = [
@@ -20,7 +29,7 @@ function createWindow() {
       label: "Édition",
       submenu: [
         {
-          label: "Couper / Cut",
+          label: "Couper",
           role: "cut",
         },
         {
