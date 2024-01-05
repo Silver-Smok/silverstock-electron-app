@@ -31,7 +31,6 @@ jobs:
           
           GITHUB_TOKEN: ${{ secrets.github_token }}
         run:
-          sudo git config --system core.longpaths true
           echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
           base64 --decode certificate_data.txt > certificate.p12
           security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }}
