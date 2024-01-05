@@ -5,7 +5,7 @@ module.exports = {
     asar: true,
     icon: "icons/logo",
     osxSign: {
-      identity: process.env.APPLE_ACCOUNT_NAME,
+      identity: process.env.APPLE_IDENTITY,
       'hardenedRuntime': true,
       'gatekeeperAssess': false,
       'entitlements': './mac/entitlements.mac.plist',
