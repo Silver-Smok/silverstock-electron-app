@@ -19,15 +19,25 @@ jobs:
         with:
           node-version: "21"
 
-      - run: npm ci
-
       - name: Add MacOS Certificate
         if: ${{ matrix.os == 'macos-13-xlarge' }}
+        env:
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
-          echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
           cat certificate_data.txt | base64 --decode > certificate.p12
-          security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }}
-          security import certificate.p12 -P ${{ secrets.CERTIFICATE_PASSWORD }} -A -t cert -f pkcs12
+
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          security import certificate.p12 -P ${{ secrets.CERTIFICATE_PASSWORD }} -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+
+          security find-identity -p codesigning -v
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Publish Electron App release
         env:
@@ -36,5 +46,4 @@ jobs:
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GITHUB_TOKEN: ${{ secrets.github_token }}
-          DEBUG: electron-forge:*,@electron/osx-sign,@electron/packager,@electron/get:*
         run: npm run publish
