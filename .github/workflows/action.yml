@@ -24,6 +24,7 @@ jobs:
       - name: Add MacOS certificate
         if: ${{ matrix.os == 'macos-latest' }}          
         run:
+          stapler -v
           echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
           base64 --decode certificate_data.txt > certificate.p12
           security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }}
