@@ -29,8 +29,10 @@ jobs:
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GITHUB_TOKEN: ${{ secrets.github_token }}
-        run: sudo git config --system core.longpaths true && security create-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} silverstock.keychain
-          && base64 --decode ```${{ secrets.CERTIFICATE_DATA }}``` > certificate.p12
+        run: sudo git config --system core.longpaths true 
+          && security create-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} silverstock.keychain
+          && echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
+          && base64 --decode certificate_data.txt > certificate.p12
           && security import ./certificate.p12 -k silverstock.keychain -P ${{secrets.CERTIFICATE_PASSWORD }}
 
       - name: Publish Linux & Windows Electron release
