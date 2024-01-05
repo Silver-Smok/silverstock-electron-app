@@ -34,7 +34,7 @@ jobs:
           echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
           base64 --decode certificate_data.txt > certificate.p12
           security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }}
-          
+          security import $RUNNER_TEMP/certificate.p12 -P ${{ secrets.CERTIFICATE_PASSWORD }} -A -t cert -f pkcs12
           
       - name: Publish Linux & Windows Electron release
         if: ${{ matrix.os  == 'ubuntu-latest' || matrix.os == 'windows-latest' }}
