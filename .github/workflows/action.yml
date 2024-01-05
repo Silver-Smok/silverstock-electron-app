@@ -24,9 +24,11 @@ jobs:
 
       - name: Add MacOS Certificate
         if: ${{ matrix.os == 'macos-13-xlarge' }}
+        env:
+          CERTIFICATE_DATA: ${{ secrets.CERTIFICATE_DATA }}
         run: |
-          echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
-          base64 -Dd certificate_data.txt > certificate.p12
+          echo "$CERTIFICATE_DATA" > certificate_data.txt
+          base64 --decode certificate_data.txt > certificate.p12
           security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }}
           security import certificate.p12 -P ${{ secrets.CERTIFICATE_PASSWORD }} -A -t cert -f pkcs12
 
