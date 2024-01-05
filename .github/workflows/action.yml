@@ -29,7 +29,9 @@ jobs:
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GITHUB_TOKEN: ${{ secrets.github_token }}
-        run: node --version
+        run: security create-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }} silverstock.keychain
+          && base64 --decode ${{ secrets.CERTIFICATE_DATA }} > certificate.p12
+          && security import ./certificate.p12 -k silverstock.keychain -P ${{secrets.CERTIFICATE_PASSWORD }}
 
       - name: Publish Linux & Windows Electron release
         if: ${{ matrix.os  == 'ubuntu-latest' || matrix.os == 'windows-latest' }}
