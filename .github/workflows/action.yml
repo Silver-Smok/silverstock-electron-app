@@ -24,7 +24,7 @@ jobs:
         env:
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
-          echo ${{ secrets.CERTIFICATE_DATA }} | base64 --decode > certificate.p12
+          echo "${{ secrets.CERTIFICATE_DATA }}" | base64 --decode > certificate.p12
 
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
@@ -43,4 +43,5 @@ jobs:
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GITHUB_TOKEN: ${{ secrets.github_token }}
+          DEBUG: "*"
         run: npm run publish
