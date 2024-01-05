@@ -4,7 +4,13 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: "icons/logo",
-    osxSign: {},
+    osxSign: {
+      identity: 'AM INNOVATIONS - 849PJFWSAR',
+      'hardenedRuntime': true,
+      'gatekeeperAssess': false,
+      'entitlements': './mac/entitlements.mac.plist',
+      'entitlementsInherit': './mac/entitlements.mac.plist',
+    },
     osxNotarize: {
       tool: "notarytool",
       appleId: process.env.APPLE_ID,
