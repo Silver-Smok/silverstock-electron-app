@@ -33,9 +33,6 @@ jobs:
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
           security import certificate.p12 -P ${{ secrets.CERTIFICATE_PASSWORD }} -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-
-          security find-identity -p codesigning -v
-
       - name: Install dependencies
         run: npm ci
 

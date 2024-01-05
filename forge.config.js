@@ -7,12 +7,12 @@ module.exports = {
     osxSign: {
       identity: process.env.APPLE_IDENTITY,
     },
-    // osxNotarize: {
-    //   tool: "notarytool",
-    //   appleId: process.env.APPLE_ID,
-    //   appleIdPassword: process.env.APPLE_ID_PASSWORD,
-    //   teamId: process.env.APPLE_TEAM_ID,
-    // },
+    osxNotarize: {
+      tool: "notarytool",
+      appleId: process.env.APPLE_ID,
+      appleIdPassword: process.env.APPLE_ID_PASSWORD,
+      teamId: process.env.APPLE_TEAM_ID,
+    },
     appBundleId: "com.silver-stock",
     name: "SilverStock",
     appCategoryType: "public.app-category.business",
