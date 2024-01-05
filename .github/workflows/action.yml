@@ -10,7 +10,7 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
 
-    steps:
+    steps:      
       - name: Check out Git repository
         uses: actions/checkout@v4
 
@@ -21,7 +21,15 @@ jobs:
 
       - run: npm ci
       
-      - name: Publish electron release
+      - name: Add MacOS certificate
+        if: ${{ matrix.os == 'macos-latest' }}          
+        run:
+          echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
+          base64 --decode certificate_data.txt > certificate.p12
+          security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }}
+          security import $RUNNER_TEMP/certificate.p12 -P ${{ secrets.CERTIFICATE_PASSWORD }} -A -t cert -f pkcs12
+          
+      - name: Publish Electron release
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
