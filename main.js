@@ -2,22 +2,15 @@ const electron = require("electron");
 const { BrowserWindow, Menu, ipcMain, app, Notification, session } = electron;
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
-
 require("electron-context-menu");
+const log = require("electron-log/main");
+const { updateElectronApp } = require("update-electron-app");
 
 let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
 
-const log = require("electron-log/main");
-
 log.initialize();
-
-log.info("Log from the main process");
-
-require("electron-context-menu");
-
-const { updateElectronApp } = require("update-electron-app");
 updateElectronApp({
   logger: log,
   notifyUser: true,
@@ -229,13 +222,12 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", createWindow);
-app.on("ready", function() {
+app.on("ready", function () {
   session.defaultSession.clearCache(null, () => {
     app.relaunch();
     app.exit();
   });
-})
-
+});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
@@ -261,12 +253,8 @@ ipcMain.on("setBadgeCount", (event, count) => {
   }
 });
 
-
 ipcMain.on("getBadgeCount", () => {
   if (isDarwin) {
     homeWindow.webContents.send("badgeCount", app.getBadgeCount());
   }
 });
-
-
-
