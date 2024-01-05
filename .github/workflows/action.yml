@@ -5,6 +5,7 @@ on: [push, workflow_dispatch]
 jobs:
   release-electron-application:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
 
     strategy:
       matrix:
