@@ -32,7 +32,7 @@ jobs:
         run: sudo git config --system core.longpaths true
           && echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
           && base64 --decode certificate_data.txt > certificate.p12
-          && security import certificate.p12 -P ${{secrets.CERTIFICATE_PASSWORD }}
+          # && security import certificate.p12 -P ${{secrets.CERTIFICATE_PASSWORD }}
 
       - name: Publish Linux & Windows Electron release
         if: ${{ matrix.os  == 'ubuntu-latest' || matrix.os == 'windows-latest' }}
