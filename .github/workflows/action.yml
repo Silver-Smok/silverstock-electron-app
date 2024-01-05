@@ -1,5 +1,5 @@
 name: Electron forge build/release
-run-name: ${{ github.actor }}
+run-name: build-release
 on: [push, workflow_dispatch]
 
 jobs:
@@ -36,5 +36,5 @@ jobs:
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GITHUB_TOKEN: ${{ secrets.github_token }}
-          DEBUG: electron-forge:*,@electron/osx-sign,@electron/packager
+          DEBUG: electron-forge:*,@electron/osx-sign,@electron/packager,@electron/get:*
         run: npm run publish
