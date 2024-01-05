@@ -10,17 +10,17 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
 
-    steps:      
+    steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
 
       - name: Install Node.js and NPM
         uses: actions/setup-node@v3
         with:
-          node-version: '21'
+          node-version: "21"
 
       - run: npm ci
-      
+
       - name: Add MacOS Certificate
         if: ${{ matrix.os == 'macos-latest' }}
         run: |
@@ -28,12 +28,13 @@ jobs:
           base64 --decode certificate_data.txt > certificate.p12
           security unlock-keychain -p ${{ secrets.KEYCHAIN_PASSWORD }}
           security import certificate.p12 -P ${{ secrets.CERTIFICATE_PASSWORD }} -A -t cert -f pkcs12
-          
+
       - name: Publish Electron App release
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          GITHUB_TOKEN: ${{ secrets.github_token }}  
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+          DEBUG: electron-forge:*,@electron/osx-sign,@electron/packager
         run: npm run publish
