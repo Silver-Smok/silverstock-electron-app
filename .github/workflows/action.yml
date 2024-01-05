@@ -1,6 +1,6 @@
 name: Electron forge build/release
 run-name: ${{ github.actor }}
-on: push
+on: [push, workflow_dispatch]
 
 jobs:
   release-electron-application:
