@@ -8,7 +8,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "source .env && electron-forge make --arch=universal --platform=darwin && electron-forge make --platform=win32 --arch=x64",
-    "publish": "electron-forge publish"
+    "publish": "DEBUG=electron-forge:*,@electron/osx-sign,@electron/packager,@electron/get:* electron-forge publish"
   },
   "author": "Julien Duizabo",
   "license": "CC0-1.0",

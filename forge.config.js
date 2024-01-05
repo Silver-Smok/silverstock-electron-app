@@ -1,18 +1,18 @@
-require('dotenv').config();
+require("dotenv").config();
 
 module.exports = {
   packagerConfig: {
     asar: true,
     icon: "icons/logo",
-    osxSign: {
-      identity: process.env.APPLE_IDENTITY,
-    },
-    osxNotarize: {
-      tool: "notarytool",
-      appleId: process.env.APPLE_ID,
-      appleIdPassword: process.env.APPLE_ID_PASSWORD,
-      teamId: process.env.APPLE_TEAM_ID,
-    },
+    // osxSign: {
+    //   identity: process.env.APPLE_IDENTITY,
+    // },
+    // osxNotarize: {
+    //   tool: "notarytool",
+    //   appleId: process.env.APPLE_ID,
+    //   appleIdPassword: process.env.APPLE_ID_PASSWORD,
+    //   teamId: process.env.APPLE_TEAM_ID,
+    // },
     appBundleId: "com.silver-stock",
     name: "SilverStock",
     appCategoryType: "public.app-category.business",
@@ -37,16 +37,16 @@ module.exports = {
   ],
   publishers: [
     {
-      name: '@electron-forge/publisher-github',
+      name: "@electron-forge/publisher-github",
       config: {
         repository: {
-          owner: 'Silver-Smok',
-          name: 'silverstock-electron-app'
+          owner: "Silver-Smok",
+          name: "silverstock-electron-app",
         },
         prerelease: false,
-        draft: false
-      }
-    }
+        draft: false,
+      },
+    },
   ],
   plugins: [
     {
