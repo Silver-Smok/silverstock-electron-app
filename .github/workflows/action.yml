@@ -1,4 +1,4 @@
-name: Electron Forge Build/Release
+name: Electron forge build/release
 run-name: ${{ github.actor }}
 on: push
 
@@ -20,4 +20,12 @@ jobs:
           node-version: '20'
 
       - run: npm ci
-      - run: node --version
+      
+      - name: Publish electron release
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        run: npm run publish
