@@ -28,12 +28,30 @@ jobs:
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          
           GITHUB_TOKEN: ${{ secrets.github_token }}
-        run: sudo git config --system core.longpaths true
-          && echo ${{ secrets.CERTIFICATE_DATA }} > certificate_data.txt
-          && base64 --decode certificate_data.txt > certificate.p12
-          # && security import certificate.p12 -P ${{secrets.CERTIFICATE_PASSWORD }}
+          
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_DATA }}
+          P12_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run:
+          sudo git config --system core.longpaths true
+          
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          
       - name: Publish Linux & Windows Electron release
         if: ${{ matrix.os  == 'ubuntu-latest' || matrix.os == 'windows-latest' }}
         env:
