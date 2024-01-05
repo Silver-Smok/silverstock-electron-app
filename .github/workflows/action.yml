@@ -24,7 +24,7 @@ jobs:
         env:
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
-          cat certificate_data.txt | base64 --decode > certificate.p12
+          echo ${{ secrets.CERTIFICATE_DATA }} | base64 --decode > certificate.p12
 
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
