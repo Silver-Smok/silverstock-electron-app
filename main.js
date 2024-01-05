@@ -14,6 +14,7 @@ log.initialize();
 updateElectronApp({
   logger: log,
   notifyUser: true,
+  updateInterval: "5 minutes",
 });
 
 function createWindow() {
