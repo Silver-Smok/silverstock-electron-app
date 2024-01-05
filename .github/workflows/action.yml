@@ -1,0 +1,23 @@
+name: Electron Forge Build/Release
+run-name: ${{ github.actor }}
+on: push
+
+jobs:
+  release-electron-application:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js and NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - run: npm ci
+      - run: node --version
