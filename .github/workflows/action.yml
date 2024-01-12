@@ -23,8 +23,8 @@ jobs:
         with:
           node-version: "21"
 
-    #  - name: Update package Version
-    #    run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/*}"
+      - name: Update package Version
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/*}"
 
       - name: Add MacOS Certificate
         if: ${{ matrix.os == 'macos-13-xlarge' }}
