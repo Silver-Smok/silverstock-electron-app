@@ -24,8 +24,11 @@ jobs:
           node-version: "21"
 
       - name: Update package Version
-        run: echo "$GITHUB_REF_NAME" | sed 's/v//'
+        run: TAG_VERSION=$(echo "v1.0.6" | sed 's/v//')
 
+      - name: Log version
+        run: echo $TAG_VERSION
+        
 #      - name: Add MacOS Certificate
 #        if: ${{ matrix.os == 'macos-13-xlarge' }}
 #        env:
