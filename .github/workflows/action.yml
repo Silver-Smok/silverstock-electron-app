@@ -61,6 +61,6 @@ jobs:
         run: |
           git config --global user.email "alexandre.silversmok@gmail.com"
           git config --global user.name "Silverstock-Bot"
-          TAG_VERSION=$(echo "v1.0.6" | sed 's/v//')
+          TAG_VERSION=$(echo "GITHUB_REF_NAME" | sed 's/v//')
           npm version $TAG_VERSION
           npm run publish
