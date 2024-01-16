@@ -3,7 +3,7 @@ run-name: build-release
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -24,7 +24,9 @@ jobs:
           node-version: "21"
 
       - name: Update package Version
-        run: echo "$github.event.release.name $github.event.release.body"
+        env:
+          RELEASE_NAME: ${{ github.ref }}
+        run: echo $RELEASE_NAME
 
 #      - name: Add MacOS Certificate
 #        if: ${{ matrix.os == 'macos-13-xlarge' }}
