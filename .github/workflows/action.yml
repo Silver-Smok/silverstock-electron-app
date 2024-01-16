@@ -59,6 +59,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.github_token }}
           DEBUG: "*"
         run: |
+          git config --global user.email "alexandre.silversmok@gmail.com"
+          git config --global user.name "Silverstock-Bot"
           TAG_VERSION=$(echo "v1.0.6" | sed 's/v//')
           npm version $TAG_VERSION
           npm run publish
