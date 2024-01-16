@@ -25,7 +25,7 @@ jobs:
 
       - name: Update package Version
         env:
-          RELEASE_NAME: ${{ github.ref }}
+          RELEASE_NAME: ${{ github.event.release.name }}
         run: echo $RELEASE_NAME
 
 #      - name: Add MacOS Certificate
