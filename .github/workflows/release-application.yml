@@ -3,8 +3,6 @@ run-name: build-release
 on:
   release:
     type: [published]
-    
-  workflow_dispatch:
 
 jobs:
   release-electron-application:
