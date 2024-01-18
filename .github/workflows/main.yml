@@ -1,0 +1,29 @@
+name: Electron forge update/version
+run-name: update-version
+on:
+  workflow_dispatch:
+
+jobs:
+    update-electron-version:
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                os: [macos-13-xlarge, ubuntu-latest, windows-latest]
+
+        steps:
+            - name: Check out Git repository
+              uses: actions/checkout@v4
+
+            - name: Install Node.js and NPM
+              uses: actions/setup-node@v3
+              with:
+                node-version: "21"
+
+            - name: Update version
+              run: |
+                git config --global user.email "alexandre.silversmok@gmail.com"
+                git config --global user.name "Silverstock-Bot"
+                npm version patch
+                tag=$(git tag --points-at HEAD)
+                echo "Tag: $tag"
