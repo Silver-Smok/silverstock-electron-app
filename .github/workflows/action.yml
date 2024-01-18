@@ -1,9 +1,9 @@
 name: Electron forge build/release
 run-name: build-release
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    type: [published]
+    
   workflow_dispatch:
 
 jobs:
