@@ -1,9 +1,10 @@
 name: Electron forge build/release
 run-name: build-release
 on:
-  release:
-    type: [published]
-
+  # release:
+    # type: [published]
+  workflow_dispatch:
+  
 jobs:
   release-electron-application:
     runs-on: ${{ matrix.os }}
