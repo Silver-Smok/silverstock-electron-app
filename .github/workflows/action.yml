@@ -50,7 +50,6 @@ jobs:
         run: npm ci
 
       - name: Publish Electron App release
-        if: ${{ matrix.os == 'macos-13-xlarge' }} || ${{matrix.os == 'ubuntu-latest' }}
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
@@ -58,10 +57,4 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GITHUB_TOKEN: ${{ secrets.github_token }}
           DEBUG: "*"
-        run: |
-          git config --global user.email "alexandre.silversmok@gmail.com"
-          git config --global user.name "Silverstock-Bot"
-          TAG_VERSION=$(echo "$GITHUB_REF_NAME" | sed 's/v//')
-          echo $TAG_VERSION
-          npm version $TAG_VERSION
-          npm run publish
+        run: npm run publish
