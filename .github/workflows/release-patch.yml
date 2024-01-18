@@ -22,8 +22,8 @@ jobs:
 
             - name: Update version
               run: |
-                git config --global user.email "alexandre.silversmok@gmail.com"
-                git config --global user.name "Silverstock-Bot"
+                git config --global user.email "github@silver-smok.com"
+                git config --global user.name "silver-smok-bot"
                 npm version patch
                 tag=$(git tag --points-at HEAD)
                 git push
