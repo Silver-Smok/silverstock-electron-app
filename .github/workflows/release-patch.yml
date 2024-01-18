@@ -5,12 +5,8 @@ on:
 
 jobs:
     update-electron-version:
-        runs-on: ${{ matrix.os }}
-
-        strategy:
-            matrix:
-                os: [ubuntu-latest]
-
+        runs-on: ubuntu-latest
+        
         steps:
             - name: Check out Git repository
               uses: actions/checkout@v4
