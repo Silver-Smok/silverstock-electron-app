@@ -3,7 +3,7 @@ run-name: build-release
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
   workflow_dispatch:
 
 jobs:
