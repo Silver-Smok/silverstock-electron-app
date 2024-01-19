@@ -27,12 +27,12 @@ jobs:
                 tag=$(git tag --points-at HEAD)
                 git push
                 git push origin "$tag"
-                echo $tag >> "$GITHUB_OUTPUT"
+                echo "TAG=$tag" >> "$GITHUB_ENV"
               id: tag_version
 
             - uses: "marvinpinto/action-automatic-releases@latest"
               with:
                 repo_token: "${{ secrets.GITHUB_TOKEN }}"
                 prerelease: false
-                automatic_release_tag: ${{ steps.tag_version.outputs.* }}
-                title: ${{ steps.tag_version.outputs.* }}
+                automatic_release_tag: ${{ env.TAG }}
+                title: ${{ env.TAG }}
