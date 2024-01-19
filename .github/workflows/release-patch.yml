@@ -27,8 +27,7 @@ jobs:
                 tag=$(git tag --points-at HEAD)
                 git push
                 git push origin "$tag"
-                tag=$tag | sed 's/\n//'
-                echo {$tag} >> "$GITHUB_OUTPUT"
+                echo $tag >> "$GITHUB_OUTPUT"
               id: tag_version
 
             - uses: "marvinpinto/action-automatic-releases@latest"
