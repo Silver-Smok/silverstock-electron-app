@@ -24,3 +24,10 @@ jobs:
                 tag=$(git tag --points-at HEAD)
                 git push
                 git push origin "$tag"
+                
+            - uses: "marvinpinto/action-automatic-releases@latest"
+              with:
+                repo_token: "${{ secrets.GITHUB_TOKEN }}"
+                prerelease: false
+                automatic_release_tag: $(git tag --points-at HEAD)
+                title: $(git tag --points-at HEAD)
