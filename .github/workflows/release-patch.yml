@@ -28,7 +28,6 @@ jobs:
                 git push
                 git push origin "$tag"
                 echo "TAG=$tag" >> "$GITHUB_ENV"
-              id: tag_version
 
             - uses: "marvinpinto/action-automatic-releases@latest"
               with:
