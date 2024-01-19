@@ -3,6 +3,9 @@ run-name: update-version
 on:
   workflow_dispatch:
 
+env:
+  tag: ""
+  
 jobs:
     update-electron-version:
         runs-on: ubuntu-latest
@@ -29,5 +32,5 @@ jobs:
               with:
                 repo_token: "${{ secrets.GITHUB_TOKEN }}"
                 prerelease: false
-                automatic_release_tag: $(git tag --points-at HEAD)
-                title: $(git tag --points-at HEAD)
+                automatic_release_tag: "$tag"
+                title: "$tag"
