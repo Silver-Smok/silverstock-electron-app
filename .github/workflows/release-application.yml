@@ -15,11 +15,8 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
-        env:
-          TAG: $GITHUB_REF_NAME
-        with:
-          ref: $TAG
+        run: git checkout v1.0.6
+        #TAG: $GITHUB_REF_NAME
 
       - name: Install Node.js and NPM
         uses: actions/setup-node@v3
