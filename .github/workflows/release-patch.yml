@@ -25,12 +25,14 @@ jobs:
                 git config --global user.name "silver-smok-bot"
                 npm version patch
                 tag=$(git tag --points-at HEAD)
+                echo "$tag" >> $GITHUB_OUTPUT
                 git push
                 git push origin "$tag"
+              id: tag_version
 
             - uses: "marvinpinto/action-automatic-releases@latest"
               with:
                 repo_token: "${{ secrets.GITHUB_TOKEN }}"
                 prerelease: false
-                automatic_release_tag: $GITHUB_ENV
-                title: $GITHUB_ENV
+                automatic_release_tag: ${{ steps.tag_version.outputs.* }}
+                title: ${{ steps.tag_version.outputs.* }}
