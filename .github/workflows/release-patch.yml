@@ -27,10 +27,12 @@ jobs:
                 tag=$(git tag --points-at HEAD)
                 git push
                 git push origin "$tag"
-                
+
+            - name: Create new release
+              run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
             - uses: "marvinpinto/action-automatic-releases@latest"
               with:
                 repo_token: "${{ secrets.GITHUB_TOKEN }}"
                 prerelease: false
-                automatic_release_tag: ${{ github.ref_name }}
-                title: ${{ github.ref_name }}
+                automatic_release_tag: $GITHUB_ENV
+                title: $GITHUB_ENV
