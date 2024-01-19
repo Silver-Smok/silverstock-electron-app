@@ -2,7 +2,7 @@ name: Electron forge build/release
 run-name: build-release
 on:
   release:
-    type: [created]
+    type: [published]
   
 jobs:
   release-electron-application:
