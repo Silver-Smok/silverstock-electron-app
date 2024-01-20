@@ -27,8 +27,10 @@ jobs:
           tag=$(git tag --points-at HEAD)
           git push origin "$tag"
           git push
+          echo "TAG=$tag" >> "$GITHUB_ENV"
           
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ env.TAG }}
           prerelease: true
