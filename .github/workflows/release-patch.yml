@@ -23,9 +23,9 @@ jobs:
               run: |
                 git config --global user.email "github@silver-smok.com"
                 git config --global user.name "silver-smok-bot"
-                npm version patch --git-tag-version false
+                npm version patch
                 tag=$(cat package.json | jq -r '.version')
-                git push --force
+                git push
                 echo "v$tag"
                 git tag "v$tag"
                 git push origin "v$tag"
