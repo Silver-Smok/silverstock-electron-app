@@ -16,7 +16,7 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.event.release.tag_name }}
 
       - name: Install Node.js and NPM
         uses: actions/setup-node@v3
