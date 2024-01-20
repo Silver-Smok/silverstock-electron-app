@@ -5,35 +5,35 @@ on:
 
 env:
   tag: ""
-  
+
 jobs:
-    update-electron-version:
-        runs-on: ubuntu-latest
-        
-        steps:
-            - name: Check out Git repository
-              uses: actions/checkout@v4
+  update-electron-version:
+    runs-on: ubuntu-latest
 
-            - name: Install Node.js and NPM
-              uses: actions/setup-node@v3
-              with:
-                node-version: "21"
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
 
-            - name: Update version
-              run: |
-                git config --global user.email "github@silver-smok.com"
-                git config --global user.name "silver-smok-bot"
-                npm version patch --git-tag-version false
-                tag=$(cat package.json | jq -r '.version')
-                git push
-                echo "v$tag"
-                git tag "v$tag"
-                git push origin "v$tag"
-                # echo "TAG=$tag" >> "$GITHUB_ENV"
-                
-          #  - uses: "marvinpinto/action-automatic-releases@latest"
-          #    with:
-          #      repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          #      prerelease: false
-          #      automatic_release_tag: ${{ env.TAG }}
-          #      title: ${{ env.TAG }}
+      - name: Install Node.js and NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: "21"
+
+      - name: Update version
+        run: |
+          git config --global user.email "github@silver-smok.com"
+          git config --global user.name "silver-smok-bot"
+          npm version patch
+          tag=$(git tag --points-at HEAD)
+          git status
+          git tag
+          echo $tag
+          git push origin "$tag"
+          # echo "TAG=$tag" >> "$GITHUB_ENV"
+
+      #  - uses: "marvinpinto/action-automatic-releases@latest"
+      #    with:
+      #      repo_token: "${{ secrets.GITHUB_TOKEN }}"
+      #      prerelease: false
+      #      automatic_release_tag: ${{ env.TAG }}
+      #      title: ${{ env.TAG }}
