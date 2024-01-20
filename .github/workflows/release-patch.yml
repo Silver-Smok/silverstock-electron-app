@@ -25,9 +25,6 @@ jobs:
           git config --global user.name "silver-smok-bot"
           npm version patch
           tag=$(git tag --points-at HEAD)
-          git status
-          git tag
-          echo $tag
           git push origin "$tag"
           # echo "TAG=$tag" >> "$GITHUB_ENV"
 
