@@ -26,9 +26,12 @@ jobs:
                 npm version patch
                 tag=$(git tag --points-at HEAD)
                 git push
+                echo "$tag"
                 git push origin "$tag"
+                echo "$tag number 2"
                 echo "TAG=$tag" >> "$GITHUB_ENV"
-
+                echo "$GITHUB_ENV"
+                
             - uses: "marvinpinto/action-automatic-releases@latest"
               with:
                 repo_token: "${{ secrets.GITHUB_TOKEN }}"
