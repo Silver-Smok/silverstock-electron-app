@@ -25,9 +25,10 @@ jobs:
                 git config --global user.name "silver-smok-bot"
                 npm version patch --git-tag-version
                 tag=$(cat package.json | jq -r '.version')
-                echo "$tag"
-                # git push
-                # git push origin "$tag"
+                echo "v$tag"
+                git tag "v$tag"
+                git push
+                git push origin "v$tag"
                 # echo "TAG=$tag" >> "$GITHUB_ENV"
                 
           #  - uses: "marvinpinto/action-automatic-releases@latest"
