@@ -27,7 +27,6 @@ jobs:
           tag=$(git tag --points-at HEAD)
           git push origin "$tag"
           git push
-          echo "TAG=$tag" >> "$GITHUB_ENV"
           
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
