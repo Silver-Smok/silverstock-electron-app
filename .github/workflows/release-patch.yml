@@ -23,15 +23,16 @@ jobs:
               run: |
                 git config --global user.email "github@silver-smok.com"
                 git config --global user.name "silver-smok-bot"
-                npm version patch
-                tag=$(git tag --points-at HEAD)
-                git push
-                git push origin "$tag"
-                echo "TAG=$tag" >> "$GITHUB_ENV"
+                npm version patch --git-tag-version
+                tag=$(cat package.json | jq -r '.version')
+                echo "$tag"
+                # git push
+                # git push origin "$tag"
+                # echo "TAG=$tag" >> "$GITHUB_ENV"
                 
-            - uses: "marvinpinto/action-automatic-releases@latest"
-              with:
-                repo_token: "${{ secrets.GITHUB_TOKEN }}"
-                prerelease: false
-                automatic_release_tag: ${{ env.TAG }}
-                title: ${{ env.TAG }}
+          #  - uses: "marvinpinto/action-automatic-releases@latest"
+          #    with:
+          #      repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          #      prerelease: false
+          #      automatic_release_tag: ${{ env.TAG }}
+          #      title: ${{ env.TAG }}
