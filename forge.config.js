@@ -17,14 +17,6 @@ module.exports = {
     appBundleId: "com.silver-stock",
     name: "SilverStock",
     appCategoryType: "public.app-category.business",
-    platform: [
-      "darwin",
-      "win32"
-    ],
-    arch: [
-      "x64", 
-      "arm64"
-    ]
   },
   rebuildConfig: {},
   makers: [
@@ -34,7 +26,6 @@ module.exports = {
     },
     {
       name: "@electron-forge/maker-zip",
-      config: {},
     },
   ],
   publishers: [
