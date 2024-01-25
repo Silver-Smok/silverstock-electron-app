@@ -48,8 +48,8 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Publish Electron App release
+        
+      - name: Publish Electron App release (Windows and Darwin arm64)
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
@@ -58,3 +58,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.github_token }}
           DEBUG: "*"
         run: npm run publish
+
+      - name: Publish Electron App release (Darwin x64)
+        if: ${{ matrix.os == 'macos-13-xlarge' }}
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+          DEBUG: "*"
+        run: npm run publish -- --arch=x64 --platform=darwin
