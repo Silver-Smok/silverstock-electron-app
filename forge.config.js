@@ -17,6 +17,10 @@ module.exports = {
     appBundleId: "com.silver-stock",
     name: "SilverStock",
     appCategoryType: "public.app-category.business",
+    arch: [
+      "x64", 
+      "arm64"
+    ]
   },
   rebuildConfig: {},
   makers: [
