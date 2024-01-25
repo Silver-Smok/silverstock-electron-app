@@ -29,13 +29,6 @@ module.exports = {
       config: {},
     },
     {
-      name: "@electron-forge/maker-dmg",
-      config: {
-        icon: "icons/logo.icns",
-        name: "SilverStock",
-      },
-    },
-    {
       name: "@electron-forge/maker-zip",
       config: {},
     },
