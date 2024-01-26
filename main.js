@@ -1,9 +1,8 @@
 const electron = require("electron");
-const { BrowserWindow, Menu, ipcMain, app, Notification, session, /*autoUpdater,*/ dialog } = electron;
+const { BrowserWindow, Menu, ipcMain, app, Notification, session, autoUpdater, dialog } = electron;
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
-const { updateElectronApp, UpdateSourceType } = require('update-electron-app')
 const log = require("electron-log/main");
 
 let homeWindow;
@@ -12,16 +11,7 @@ const isDarwin = process.platform === "darwin";
 
 log.initialize()
 
-updateElectronApp({
-  updateSource: {
-    type: UpdateSourceType.ElectronPublicUpdateService,
-    repo: 'Silver-Smok/silverstock-electron-app'
-  },
-  updateInterval: '1 minute',
-  logger: require('electron-log')
-})
-
-/*const url = `https://github.com/Silver-Smok/silverstock-electron-app/releases/tag/v1.0.25`
+const url = `https://github.com/Silver-Smok/silverstock-electron-app/releases/tag/v1.0.25`
 
 autoUpdater.setFeedURL({ url })
 
@@ -75,7 +65,7 @@ autoUpdater.on('update-available', (message) => {
 autoUpdater.on('error', (message) => {
   console.error('There was a problem updating the application')
   console.error(message)
-})*/
+})
 
 function createWindow() {
   const template = [
