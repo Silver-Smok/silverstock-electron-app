@@ -1,21 +1,42 @@
 const electron = require("electron");
-const { BrowserWindow, Menu, ipcMain, app, Notification, session } = electron;
+const { BrowserWindow, Menu, ipcMain, app, Notification, session, autoUpdater, dialog } = electron;
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
 const log = require("electron-log/main");
-const { updateElectronApp } = require("update-electron-app");
 
 let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
 
 log.initialize();
-updateElectronApp({
-  logger: log,
-  notifyUser: true,
-  updateInterval: "5 minutes",
-});
+const url = `https://github.com/Silver-Smok/silverstock-electron-app/releases/tag/v1.0.25`
+
+autoUpdater.setFeedURL({ url })
+
+setInterval(() => {
+  autoUpdater.checkForUpdates()
+}, 60000)
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail:
+      'A new version has been downloaded. Restart the application to apply the updates.'
+  }
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  })
+})
+
+autoUpdater.on('error', (message) => {
+  console.error('There was a problem updating the application')
+  console.error(message)
+})
 
 function createWindow() {
   const template = [
@@ -27,7 +48,7 @@ function createWindow() {
           role: "cut",
         },
         {
-          label: "Copier",
+          label: "Copier / Copy",
           role: "copy",
         },
         {
