@@ -11,9 +11,12 @@ const isDarwin = process.platform === "darwin";
 
 log.initialize()
 
-const url = `https://github.com/Silver-Smok/silverstock-electron-app/releases/tag/v1.0.25`
-
-autoUpdater.setFeedURL({ url })
+autoUpdater.setFeedURL({ 
+  provider: 'github',
+  owner: 'Silver-Smok',
+  repo: 'silverstock-electron-app',
+  private: false 
+});
 
 setInterval(() => {
   autoUpdater.checkForUpdates()
