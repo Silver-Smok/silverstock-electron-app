@@ -3,14 +3,24 @@ const { BrowserWindow, Menu, ipcMain, app, Notification, session, /*autoUpdater,
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
-require('update-electron-app')()
+const { updateElectronApp, UpdateSourceType } = require('update-electron-app')
 const log = require("electron-log/main");
 
 let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
 
-log.initialize();
+log.initialize()
+
+updateElectronApp({
+  updateSource: {
+    type: UpdateSourceType.ElectronPublicUpdateService,
+    repo: 'Silver-Smok/silverstock-electron-app'
+  },
+  updateInterval: '1 minute',
+  logger: require('electron-log')
+})
+
 /*const url = `https://github.com/Silver-Smok/silverstock-electron-app/releases/tag/v1.0.25`
 
 autoUpdater.setFeedURL({ url })
