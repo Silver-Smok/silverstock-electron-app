@@ -11,17 +11,6 @@ const isDarwin = process.platform === "darwin";
 
 log.initialize()
 
-autoUpdater.setFeedURL({ 
-  provider: 'github',
-  owner: 'Silver-Smok',
-  repo: 'silverstock-electron-app',
-  private: false 
-});
-
-setInterval(() => {
-  autoUpdater.checkForUpdates()
-}, 60000)
-
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const dialogOpts = {
     type: 'info',
@@ -277,6 +266,10 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on("ready", createWindow);
 app.on("ready", function () {
+  setInterval(() => {
+    console.log('check new app update');
+    autoUpdater.checkForUpdates()
+  }, 60000);
   session.defaultSession.clearCache(null, () => {
     app.relaunch();
     app.exit();
