@@ -1,9 +1,10 @@
 const electron = require("electron");
-const { BrowserWindow, Menu, ipcMain, app, Notification, session, autoUpdater, dialog } = electron;
+const { BrowserWindow, Menu, ipcMain, app, Notification, session, dialog } = electron;
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
 const log = require("electron-log/main");
+const { autoUpdater } = require('electron-updater');
 
 let homeWindow;
 let mainWindowState = null;
@@ -26,7 +27,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   })
 })
 
-autoUpdater.on('update-not-available', (message) => {
+autoUpdater.on('update-not-available', () => {
   const dialogOpts = {
     type: 'info',
     buttons: ['Restart', 'Later'],
@@ -40,7 +41,7 @@ autoUpdater.on('update-not-available', (message) => {
   })
 })
 
-autoUpdater.on('update-available', (message) => {
+autoUpdater.on('update-available', () => {
   const dialogOpts = {
     type: 'info',
     buttons: ['Restart', 'Later'],
@@ -60,6 +61,10 @@ autoUpdater.on('error', (message) => {
 })
 
 function createWindow() {
+  autoUpdater.checkForUpdates()
+  setInterval(() => {
+    autoUpdater.checkForUpdates()
+   }, 60000);
   const template = [
     {
       label: "Édition",
@@ -69,7 +74,7 @@ function createWindow() {
           role: "cut",
         },
         {
-          label: "Copier / Copy",
+          label: "Copier",
           role: "copy",
         },
         {
@@ -266,10 +271,6 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on("ready", createWindow);
 app.on("ready", function () {
-  setInterval(() => {
-    console.log('check new app update');
-    autoUpdater.checkForUpdates()
-  }, 60000);
   session.defaultSession.clearCache(null, () => {
     app.relaunch();
     app.exit();
