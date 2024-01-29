@@ -17,6 +17,10 @@ module.exports = {
     appBundleId: "com.silver-stock",
     name: "SilverStock",
     appCategoryType: "public.app-category.business",
+    arch: [
+      "x64", 
+      "arm64"
+    ]
   },
   rebuildConfig: {},
   makers: [
@@ -26,10 +30,6 @@ module.exports = {
     },
     {
       name: "@electron-forge/maker-dmg",
-      platform: [
-        "x64",
-        "arm64"
-      ],
       config: {
         icon: "icons/logo.icns",
         name: "SilverStock",
