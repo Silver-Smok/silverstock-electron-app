@@ -29,6 +29,7 @@
     "electron-context-menu": "3.6.1",
     "electron-log": "5.0.3",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "6.1.7",
     "electron-window-state": "5.0.3",
     "update-electron-app": "3.0.0"
   },
