@@ -27,7 +27,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   })
 })
 
-autoUpdater.on('update-not-available', () => {
+autoUpdater.on('update-not-available', (info) => {
   const dialogOpts = {
     type: 'info',
     buttons: ['Restart', 'Later'],
@@ -41,12 +41,12 @@ autoUpdater.on('update-not-available', () => {
   })
 })
 
-autoUpdater.on('update-available', () => {
+autoUpdater.on('update-available', (event, releaseNotes, releaseName) => {
   const dialogOpts = {
     type: 'info',
     buttons: ['Restart', 'Later'],
     title: 'Application Update',
-    message: 'Update available',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
     detail:
       'A new version is available.'
   }
@@ -56,11 +56,26 @@ autoUpdater.on('update-available', () => {
 })
 
 autoUpdater.on('error', (message) => {
-  console.error('There was a problem updating the application')
-  console.error(message)
+  const dialogOpts = {
+    type: 'error',
+    buttons: ['Restart', 'Later'],
+    title: 'ERROR',
+    message: message,
+    detail:
+      'Error during the update...'
+  }
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) console.log('ok')
+  })
 })
 
 function createWindow() {
+  autoUpdater.setFeedURL({
+    provider: "github",
+    owner: "Silver-Smok",
+    repo: "silverstock-electron-app",
+  });
+
   autoUpdater.checkForUpdates()
   setInterval(() => {
     autoUpdater.checkForUpdates()
