@@ -26,6 +26,10 @@ module.exports = {
     },
     {
       name: "@electron-forge/maker-dmg",
+      platform: [
+        "x64",
+        "arm64"
+      ],
       config: {
         icon: "icons/logo.icns",
         name: "SilverStock",
