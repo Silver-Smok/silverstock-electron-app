@@ -8,7 +8,8 @@ const log = require("electron-log/main");
 let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
-const url = `https://update.electronjs.org/Silver-Smok/silverstock-electron-app/darwin-x64/1.0.1`
+const server = 'https://update.electronjs.org'
+const url = `${server}/Silver-Smok/silverstock-electron-app/${process.platform}-${process.arch}/${app.getVersion()}`
 
 log.initialize()
 
@@ -22,21 +23,6 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
     message: process.platform === 'win32' ? releaseNotes : releaseName,
     detail:
       'A new version has been downloaded. Restart the application to apply the updates.'
-  }
-
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall()
-  })
-})
-
-autoUpdater.on('update-not-available', (event, releaseNotes, releaseName) => {
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
-    detail:
-      'No update available for the moment.'
   }
 
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
