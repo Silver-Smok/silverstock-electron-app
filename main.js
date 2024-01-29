@@ -17,7 +17,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
     type: 'info',
     buttons: ['Restart', 'Later'],
     title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    message: 'Download in progress',
     detail:
       'A new version has been downloaded. Restart the application to apply the updates.'
   }
@@ -32,7 +32,7 @@ autoUpdater.on('update-not-available', () => {
     type: 'info',
     buttons: ['Restart', 'Later'],
     title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    message: 'No Update available',
     detail:
       'No new version available...'
   }
@@ -46,7 +46,7 @@ autoUpdater.on('update-available', () => {
     type: 'info',
     buttons: ['Restart', 'Later'],
     title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    message: 'Update available',
     detail:
       'A new version is available.'
   }
