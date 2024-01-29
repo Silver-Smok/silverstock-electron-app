@@ -48,7 +48,7 @@ function createWindow() {
           role: "cut",
         },
         {
-          label: "Copier / Copy",
+          label: "Copier",
           role: "copy",
         },
         {
