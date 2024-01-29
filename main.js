@@ -8,8 +8,7 @@ const log = require("electron-log/main");
 let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
-const server = 'https://your-deployment-url.com'
-const url = `${server}/update/${process.platform}/${app.getVersion()}`
+const url = `https://update.electronjs.org/Silver-Smok/silverstock-electron-app/darwin-x64/1.0.1`
 
 log.initialize()
 
