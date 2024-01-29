@@ -1,23 +1,26 @@
 const electron = require("electron");
-const { BrowserWindow, Menu, ipcMain, app, Notification, session, dialog } = electron;
+const { BrowserWindow, Menu, ipcMain, app, Notification, session, dialog, autoUpdater } = electron;
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
 const log = require("electron-log/main");
-const { autoUpdater } = require('electron-updater');
 
 let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
+const server = 'https://your-deployment-url.com'
+const url = `${server}/update/${process.platform}/${app.getVersion()}`
 
 log.initialize()
+
+autoUpdater.setFeedURL({ url })
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const dialogOpts = {
     type: 'info',
     buttons: ['Restart', 'Later'],
     title: 'Application Update',
-    message: 'Download in progress',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
     detail:
       'A new version has been downloaded. Restart the application to apply the updates.'
   }
@@ -27,59 +30,15 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   })
 })
 
-autoUpdater.on('update-not-available', (info) => {
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
-    message: 'No Update available',
-    detail:
-      'No new version available...'
-  }
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) console.log('ok')
-  })
-})
-
-autoUpdater.on('update-available', (event, releaseNotes, releaseName) => {
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
-    detail:
-      'A new version is available.'
-  }
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) console.log('ok')
-  })
-})
-
 autoUpdater.on('error', (message) => {
-  const dialogOpts = {
-    type: 'error',
-    buttons: ['Restart', 'Later'],
-    title: 'ERROR',
-    message: message,
-    detail:
-      'Error during the update...'
-  }
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) console.log('ok')
-  })
+  console.error('There was a problem updating the application')
+  console.error(message)
 })
 
 function createWindow() {
-  autoUpdater.setFeedURL({
-    provider: "github",
-    owner: "Silver-Smok",
-    repo: "silverstock-electron-app",
-  });
-
-  autoUpdater.checkForUpdates()
   setInterval(() => {
     autoUpdater.checkForUpdates()
-   }, 60000);
+  }, 60000)
   const template = [
     {
       label: "Édition",
