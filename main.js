@@ -8,7 +8,7 @@ const log = require("electron-log/main");
 let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
-const url = `https://raw.githubusercontent.com/Silver-Smok/silverstock-electron-app/master/${process.platform}-${process.arch}.json`
+const url = `https://raw.githubusercontent.com/Silver-Smok/silverstock-electron-app/master/updaters/${process.platform}-${process.arch}.json`
 log.initialize()
 
 autoUpdater.setFeedURL({ url })
