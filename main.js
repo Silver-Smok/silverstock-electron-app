@@ -24,7 +24,11 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   }
 
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+    if (returnValue.response === 0) {
+      log.info('updating')
+      autoUpdater.quitAndInstall()
+      log.info('updated')
+    }
   })
 })
 
