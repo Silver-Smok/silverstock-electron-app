@@ -46,8 +46,16 @@ jobs:
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
+      - name: Create updater json files
+        env:
+          tag: ${{ github.event.release.name }}
+          description: ${{ github.event.release.body }}
+        run : |
+          echo "$tag"
+          echo "$description"   
+          
       - name: Install dependencies
-        run: npm ci
+        run: npm ci    
         
       - name: Publish Electron App release (Windows and Darwin arm64)
         env:
