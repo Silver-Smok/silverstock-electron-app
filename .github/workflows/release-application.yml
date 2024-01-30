@@ -60,7 +60,7 @@ jobs:
           mv darwin-x64.json darwin-arm64.json win32-x64.json updaters/
           git add .
           git commit -m "Create updaters files"
-          git push origin "$tag"
+          git push origin HEAD:"$tag" -f
           
       - name: Install dependencies
         run: npm ci    
