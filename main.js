@@ -34,6 +34,7 @@ autoUpdater.on('error', (message) => {
 })
 
 function createWindow() {
+  log.info('URL', url)
   autoUpdater.checkForUpdates()
   setInterval(() => {
     autoUpdater.checkForUpdates()
