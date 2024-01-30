@@ -52,10 +52,12 @@ jobs:
           tag: ${{ github.event.release.name }}
           description: ${{ github.event.release.body }}
         run : |
+          mkdir updaters
           tagNoVersion=$(echo "$tag" | sed 's/v//')
           echo "{\"name\":\"$tag\",\"notes\":\"$description\",\"url\":\"https://github.com/Silver-Smok/silverstock-electron-app/releases/download/$tag/SilverStock-darwin-x64-$tagNoVersion.zip\"}" > darwin-x64.json
           echo "{\"name\":\"$tag\",\"notes\":\"$description\",\"url\":\"https://github.com/Silver-Smok/silverstock-electron-app/releases/download/$tag/SilverStock-darwin-arm64-$tagNoVersion.zip\"}" > darwin-arm64.json
           echo "{\"name\":\"$tag\",\"notes\":\"$description\",\"url\":\"https://github.com/Silver-Smok/silverstock-electron-app/releases/download/$tag/SilverStock-win32-x64-$tagNoVersion.zip\"}" > win32-x64.json
+          mv darwin-x64.json darwin-arm64.json win32-x64.json updaters/
           git add .
           git commit -m "Update version and updater files"
           git push origin "$tag"     
