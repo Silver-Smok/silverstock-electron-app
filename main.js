@@ -16,18 +16,16 @@ autoUpdater.setFeedURL({ url })
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const dialogOpts = {
     type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
+    buttons: ['Redémarrer', 'Plus tard'],
+    title: 'Application mise à jour',
     message: process.platform === 'win32' ? releaseNotes : releaseName,
     detail:
-      'A new version has been downloaded. Restart the application to apply the updates.'
+      "Une nouvelle version de l'application a été téléchargé, merci de relancer l'application."
   }
 
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
     if (returnValue.response === 0) {
-      log.info('updating')
       autoUpdater.quitAndInstall()
-      log.info('updated')
     }
   })
 })
@@ -259,6 +257,7 @@ app.on("ready", function () {
 app.on("window-all-closed", function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
+  autoUpdater.quitAndInstall();
   app.quit();
 });
 
