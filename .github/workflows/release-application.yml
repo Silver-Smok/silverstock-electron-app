@@ -61,7 +61,7 @@ jobs:
           git branch
           git add .
           git commit -m "Update version and updater files"
-          git push origin "$tag"     
+          git push origin HEAD:"$tag"
           
       - name: Install dependencies
         run: npm ci    
