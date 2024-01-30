@@ -59,7 +59,7 @@ jobs:
           echo "{\"name\":\"$tag\",\"notes\":\"$description\",\"url\":\"https://github.com/Silver-Smok/silverstock-electron-app/releases/download/$tag/SilverStock-win32-x64-$tagNoVersion.zip\"}" > win32-x64.json
           mv darwin-x64.json darwin-arm64.json win32-x64.json updaters/
           git add .
-          git commit -m "Update version and updater files"
+          git commit -m "Create updaters files"
           git push origin "$tag"
           
       - name: Install dependencies
