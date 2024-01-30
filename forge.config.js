@@ -32,7 +32,7 @@ module.exports = {
       name: "@electron-forge/maker-dmg",
       config: {
         icon: "icons/logo.icns",
-        name: "SilverStock",
+        name: "SilverStock-arm64",
       },
     },
     {
