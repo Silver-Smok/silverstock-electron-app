@@ -26,12 +26,6 @@ jobs:
           git config --global user.name "silver-smok-bot"
           npm version patch
           tag=$(git tag --points-at HEAD)
-          tagNoVersion=$(echo "$tag" | sed 's/v//')
-          echo "{\"name\":\"$tag\",\"notes\":\"New update\",\"url\":\"https://github.com/Silver-Smok/silverstock-electron-app/releases/download/$tag/SilverStock-darwin-x64-$tagNoVersion.zip\"}" > darwin-x64.json
-          echo "{\"name\":\"$tag\",\"notes\":\"New update\",\"url\":\"https://github.com/Silver-Smok/silverstock-electron-app/releases/download/$tag/SilverStock-darwin-arm64-$tagNoVersion.zip\"}" > darwin-arm64.json
-          echo "{\"name\":\"$tag\",\"notes\":\"New update\",\"url\":\"https://github.com/Silver-Smok/silverstock-electron-app/releases/download/$tag/SilverStock-win32-x64-$tagNoVersion.zip\"}" > win32-x64.json
-          git add .
-          git commit -m "Update version and updater files"
           git push origin "$tag"
           git push
           echo "TAG=$tag" >> "$GITHUB_ENV"
