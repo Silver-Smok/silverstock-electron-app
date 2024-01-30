@@ -58,7 +58,7 @@ jobs:
           echo "{\"name\":\"$tag\",\"notes\":\"$description\",\"url\":\"https://github.com/Silver-Smok/silverstock-electron-app/releases/download/$tag/SilverStock-win32-x64-$tagNoVersion.zip\"}" > win32-x64.json
           git add .
           git commit -m "Update version and updater files"
-          git push origin "$tag" --force        
+          git push origin "$tag"     
           
       - name: Install dependencies
         run: npm ci    
