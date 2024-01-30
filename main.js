@@ -34,6 +34,7 @@ autoUpdater.on('error', (message) => {
 })
 
 function createWindow() {
+  autoUpdater.checkForUpdates()
   setInterval(() => {
     autoUpdater.checkForUpdates()
   }, 60000)
