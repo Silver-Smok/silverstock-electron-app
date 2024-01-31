@@ -38,10 +38,7 @@ function getAppUpdate() {
 
   fetch('https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate', {
     method: 'POST',
-    body: JSON.stringify({data:{ platform: process.platform, arch: process.arch, version: appVersion }}),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
+    body: JSON.stringify({ platform: process.platform, arch: process.arch, version: appVersion }),
   })
   .then(async (result) => {
     const data = await result.json()
@@ -51,7 +48,7 @@ function getAppUpdate() {
     }
   })
   .catch((err) => {
-    console.log('error', err)
+    log.error('error', err)
   })
 }
 
