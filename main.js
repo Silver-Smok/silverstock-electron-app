@@ -8,10 +8,7 @@ const log = require("electron-log/main");
 let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
-const url = `https://raw.githubusercontent.com/Silver-Smok/silverstock-electron-app/master/updaters/${process.platform}-${process.arch}.json`
 log.initialize()
-
-autoUpdater.setFeedURL({ url })
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const dialogOpts = {
@@ -38,14 +35,14 @@ autoUpdater.on('error', (message) => {
 function getAppUpdate() {
   fetch('https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate', {
     method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
     body: JSON.stringify({data:{ platform: process.platform, arch: process.arch }})
   })
-  .then((result) => {
-    console.log('result', result)
+  .then(async (result) => {
+    const data = await result.json()
+    if (result.status !== 204) {
+      autoUpdater.setFeedURL(data.url)
+      autoUpdater.checkForUpdates()
+    }
   })
   .catch((err) => {
     console.log('error', err)
@@ -54,7 +51,6 @@ function getAppUpdate() {
 
 function createWindow() {
   getAppUpdate()
-  autoUpdater.checkForUpdates()
   setInterval(() => {
     autoUpdater.checkForUpdates()
   }, 60000)
