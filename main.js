@@ -35,7 +35,10 @@ autoUpdater.on('error', (message) => {
 function getAppUpdate() {
   fetch('https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate', {
     method: 'POST',
-    body: JSON.stringify({data:{ platform: process.platform, arch: process.arch }})
+    body: JSON.stringify({data:{ platform: process.platform, arch: process.arch }}),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
   })
   .then(async (result) => {
     const data = await result.json()
@@ -245,8 +248,8 @@ function createWindow() {
   homeWindow = new BrowserWindow(options);
   homeWindow.loadURL(
     process.env.NODE_ENV === "development"
-      ? "http://192.168.1.36:3000"
-      : "https://app.silver-smok.com/"
+      ? "http://127.0.0.1:3006"
+      : "http://127.0.0.1:3000"
   );
 
   homeWindow.on("show", function () {
