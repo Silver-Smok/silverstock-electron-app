@@ -35,8 +35,25 @@ autoUpdater.on('error', (message) => {
   log.error(message)
 })
 
+function getAppUpdate() {
+  fetch('https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({data:{ platform: process.platform, arch: process.arch }})
+  })
+  .then((result) => {
+    console.log('result', result)
+  })
+  .catch((err) => {
+    console.log('error', err)
+  })
+}
+
 function createWindow() {
-  log.info('URL', url)
+  getAppUpdate()
   autoUpdater.checkForUpdates()
   setInterval(() => {
     autoUpdater.checkForUpdates()
@@ -232,7 +249,7 @@ function createWindow() {
   homeWindow = new BrowserWindow(options);
   homeWindow.loadURL(
     process.env.NODE_ENV === "development"
-      ? "http://127.0.0.1:3006"
+      ? "http://192.168.1.36:3000"
       : "https://app.silver-smok.com/"
   );
 
