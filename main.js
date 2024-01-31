@@ -4,6 +4,7 @@ const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
 const log = require("electron-log/main");
+const { version } = require('./package.json');
 
 let homeWindow;
 let mainWindowState = null;
@@ -33,9 +34,11 @@ autoUpdater.on('error', (message) => {
 })
 
 function getAppUpdate() {
+  const appVersion = 'v' + version
+
   fetch('https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate', {
     method: 'POST',
-    body: JSON.stringify({data:{ platform: process.platform, arch: process.arch }}),
+    body: JSON.stringify({data:{ platform: process.platform, arch: process.arch, version: appVersion }}),
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     }
@@ -55,7 +58,7 @@ function getAppUpdate() {
 function createWindow() {
   getAppUpdate()
   setInterval(() => {
-    autoUpdater.checkForUpdates()
+      getAppUpdate()
   }, 60000)
   const template = [
     {
@@ -249,7 +252,7 @@ function createWindow() {
   homeWindow.loadURL(
     process.env.NODE_ENV === "development"
       ? "http://127.0.0.1:3006"
-      : "http://127.0.0.1:3000"
+      : "https://app.silver-smok.com/"
   );
 
   homeWindow.on("show", function () {
