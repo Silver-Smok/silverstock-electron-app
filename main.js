@@ -4,7 +4,6 @@ const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
 const log = require("electron-log/main");
-const { version } = require('./package.json');
 
 let homeWindow;
 let mainWindowState = null;
@@ -34,7 +33,10 @@ autoUpdater.on('error', (message) => {
 })
 
 function getAppUpdate() {
+  const { version } = require('./package.json');
+
   const appVersion = 'v' + version
+  log.info('appVersion', appVersion)
   const url = `https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate?platform=${process.platform}&arch=${process.arch}&version=${appVersion}`
   autoUpdater.setFeedURL({ url: url })
 
@@ -42,7 +44,6 @@ function getAppUpdate() {
     method: 'GET',
   })
   .then(async (result) => {
-    const data = await result.json()
     if (result.status !== 204) {
       autoUpdater.checkForUpdates()
     }
