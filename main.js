@@ -36,9 +36,26 @@ autoUpdater.on('error', (message) => {
 function getAppUpdate() {
   const appVersion = 'v' + version
 
+  var details = {
+    'platform': process.platform,
+    'arch': process.arch,
+    'version': appVersion
+};
+
+  var formBody = [];
+  for (var property in details) {
+    var encodedKey = encodeURIComponent(property);
+    var encodedValue = encodeURIComponent(details[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody = formBody.join("&");
+
   fetch('https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate', {
     method: 'POST',
-    body: JSON.stringify({ platform: process.platform, arch: process.arch, version: appVersion }),
+    body: formBody,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
   })
   .then(async (result) => {
     const data = await result.json()
