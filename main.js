@@ -14,7 +14,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const dialogOpts = {
     type: 'info',
     buttons: ['Redémarrer', 'Plus tard'],
-    title: 'Application mise à jour',
+    title: "Mise à jour de l'application",
     message: process.platform === 'win32' ? releaseNotes : releaseName,
     detail:
       "Une nouvelle version de l'application a été téléchargé, merci de relancer l'application."
@@ -28,7 +28,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 })
 
 autoUpdater.on('error', (message) => {
-  log.error('There was a problem updating the application')
+  log.error("Problème lors de la mise à jour de l'application.")
   log.error(message)
 })
 
@@ -36,7 +36,6 @@ function getAppUpdate() {
   const { version } = require('./package.json');
 
   const appVersion = 'v' + version
-  log.info('appVersion', appVersion)
   const url = `https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate?platform=${process.platform}&arch=${process.arch}&version=${appVersion}`
   autoUpdater.setFeedURL({ url: url })
 
