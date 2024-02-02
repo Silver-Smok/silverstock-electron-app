@@ -36,7 +36,7 @@ autoUpdater.on('error', (message) => {
 })
 
 function getAppUpdate() {
-  const { version } = require('./package.json');
+  const version = app.getVersion()
 
   const appVersion = 'v' + version
   const url = `https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate?platform=${process.platform}&arch=${process.arch}&version=${appVersion}`
