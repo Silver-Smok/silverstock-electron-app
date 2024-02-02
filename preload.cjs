@@ -17,6 +17,9 @@ contextBridge.exposeInMainWorld("electron", {
       ipcRenderer.send("getAppVersion");
     });
   },
+  getAppUpdate() {
+    ipcRenderer.send("getAppUpdate")
+  },
   setBadgeCount(count) {
     ipcRenderer.send("setBadgeCount", count);
   },

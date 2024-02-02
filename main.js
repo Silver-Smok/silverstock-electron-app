@@ -291,6 +291,10 @@ ipcMain.on("getPlatform", () => {
   homeWindow.webContents.send("platform", process.platform);
 });
 
+ipcMain.on("getAppUpdate", () => {
+  homeWindow.webContents.send("getAppUpdate", app.quitAndInstall());
+})
+
 ipcMain.on("setBadgeCount", (event, count) => {
   if (isDarwin) {
     app.setBadgeCount(count);
