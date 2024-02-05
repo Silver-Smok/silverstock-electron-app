@@ -291,8 +291,12 @@ ipcMain.on("getPlatform", () => {
   homeWindow.webContents.send("platform", process.platform);
 });
 
-ipcMain.on("getAppUpdate", () => {
-  homeWindow.webContents.send("getAppUpdate", autoUpdater.quitAndInstall());
+ipcMain.on("checkUpdate", () => {
+  homeWindow.webContents.send("canUpdate", canUpdate);
+})
+
+ipcMain.on("updateApp", () => {
+  autoUpdater.quitAndInstall();
 })
 
 ipcMain.on("setBadgeCount", (event, count) => {
