@@ -28,6 +28,11 @@ contextBridge.exposeInMainWorld("electron", {
   updateApp() {
     ipcRenderer.send("updateApp");
   },
+  onAppUpdate(callback) {
+    ipcRenderer.on("appUpdate", (event, updated) => {
+      callback(updated);
+    });
+  },
   setBadgeCount(count) {
     ipcRenderer.send("setBadgeCount", count);
   },

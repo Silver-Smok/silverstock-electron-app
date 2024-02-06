@@ -21,6 +21,8 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
       "Une nouvelle version de l'application a été téléchargé, merci de relancer l'application."
   }
 
+  homeWindow.webContents.send("appUpdate", true);
+
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
     if (returnValue.response === 0) {
       autoUpdater.quitAndInstall()
