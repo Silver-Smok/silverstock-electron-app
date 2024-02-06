@@ -7,7 +7,7 @@ const log = require("electron-log/main");
 
 let homeWindow;
 let mainWindowState = null;
-let canUpdate = true;
+let canUpdate = false;
 const isDarwin = process.platform === "darwin";
 log.initialize()
 
@@ -25,7 +25,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
     if (returnValue.response === 0) {
       autoUpdater.quitAndInstall()
     } else {
-      canUpdate = false
+      canUpdate = true
     }
   })
 })
@@ -46,7 +46,7 @@ function getAppUpdate() {
     method: 'GET',
   })
   .then(async (result) => {
-    if (result.status !== 204 && canUpdate === true) {
+    if (result.status !== 204 && canUpdate === false) {
       autoUpdater.checkForUpdates()
     }
   })
