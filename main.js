@@ -1,3 +1,4 @@
+if (require('electron-squirrel-startup')) return;
 const electron = require("electron");
 const { BrowserWindow, Menu, ipcMain, app, Notification, session, dialog, autoUpdater } = electron;
 const windowStateKeeper = require("electron-window-state");
@@ -48,7 +49,7 @@ function getAppUpdate() {
     method: 'GET',
   })
   .then(async (result) => {
-    if (result.status !== 204 && canUpdate === false) {
+    if (result.status !== 204 && !canUpdate) {
       autoUpdater.checkForUpdates()
     }
   })
