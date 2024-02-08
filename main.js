@@ -23,6 +23,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   }
 
   homeWindow.webContents.send("appUpdate", true);
+  canUpdate = true;
 
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
     if (returnValue.response === 0) {
@@ -255,7 +256,7 @@ function createWindow() {
   homeWindow.loadURL(
     process.env.NODE_ENV === "development"
       ? "http://127.0.0.1:3006"
-      : "https://app.silver-smok.com/"
+      : "http://127.0.0.1:3000"
   );
 
   homeWindow.on("show", function () {
