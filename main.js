@@ -12,58 +12,47 @@ let canUpdate = false;
 const isDarwin = process.platform === "darwin";
 log.initialize()
 
-autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Redémarrer', 'Plus tard'],
-    title: "Mise à jour de l'application",
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
-    detail:
-      "Une nouvelle version de l'application a été téléchargé, merci de relancer l'application."
-  }
+const startUpdater = () => {
+  const updateTimeout = setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, 60000);
 
-  homeWindow.webContents.send("appUpdate", true);
-  canUpdate = true;
+  const updateUrl = `https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate?platform=${
+    process.platform
+  }&arch=${process.arch}&version=v${app.getVersion()}`;
 
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) {
-      autoUpdater.quitAndInstall()
-    } else {
-      canUpdate = true
-    }
-  })
-})
+  autoUpdater.setFeedURL({ url: updateUrl });
+  
+  autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
+    const dialogOpts = {
+      type: "info",
+      buttons: ["Redémarrer", "Plus tard"],
+      title: "Mise à jour de l'application",
+      message: process.platform === "win32" ? releaseNotes : releaseName,
+      detail:
+        "Une nouvelle version de l'application a été téléchargé, merci de relancer l'application.",
+    };
 
-autoUpdater.on('error', (message) => {
-  log.error("Problème lors de la mise à jour de l'application.")
-  log.error(message)
-})
+    homeWindow.webContents.send("appUpdate", true);
 
-function getAppUpdate() {
-  const version = app.getVersion()
+    dialog.showMessageBox(dialogOpts).then((returnValue) => {
+      if (returnValue.response === 0) {
+        autoUpdater.quitAndInstall();
+      } else {
+        cancelTimeout(updateTimeout);
+      }
+    });
+  });
+  
+  autoUpdater.on("error", (message) => {
+    log.error("Problème lors de la mise à jour de l'application.");
+    log.error(message);
+  });
+};
 
-  const appVersion = 'v' + version
-  const url = `https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate?platform=${process.platform}&arch=${process.arch}&version=${appVersion}`
-  autoUpdater.setFeedURL({ url: url })
-
-  fetch(url, {
-    method: 'GET',
-  })
-  .then(async (result) => {
-    if (result.status !== 204 && !canUpdate) {
-      autoUpdater.checkForUpdates()
-    }
-  })
-  .catch((err) => {
-    log.error('error', err)
-  })
-}
+startUpdater();
 
 function createWindow() {
-  getAppUpdate()
-  setInterval(() => {
-      getAppUpdate()
-  }, 60000)
   const template = [
     {
       label: "Édition",
@@ -256,7 +245,7 @@ function createWindow() {
   homeWindow.loadURL(
     process.env.NODE_ENV === "development"
       ? "http://127.0.0.1:3006"
-      : "https://app.silver-smok.com/"
+      : "http://192.168.1.16:3000"
   );
 
   homeWindow.on("show", function () {
