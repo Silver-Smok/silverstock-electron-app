@@ -56,7 +56,7 @@ jobs:
           tagNoVersion=$(echo "$tag" | sed 's/v//')
           echo "{\"name\":\"$tag\",\"notes\":\"$description\",\"url\":\"https://github.com/Silver-Smok/silverstock-electron-app/releases/download/$tag/SilverStock-darwin-x64-$tagNoVersion.zip\"}" > darwin-x64.json
           echo "{\"name\":\"$tag\",\"notes\":\"$description\",\"url\":\"https://github.com/Silver-Smok/silverstock-electron-app/releases/download/$tag/SilverStock-darwin-arm64-$tagNoVersion.zip\"}" > darwin-arm64.json
-          mv darwin-x64.json darwin-arm64.json win32-x64.json updaters/
+          mv darwin-x64.json darwin-arm64.json updaters/
           git add .
           git commit -m "Create updaters files"
           git push origin HEAD:master -f
