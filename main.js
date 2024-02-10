@@ -17,11 +17,15 @@ const startUpdater = () => {
     autoUpdater.checkForUpdates();
   }, 60000);
 
-  const updateUrl = `https://europe-west1-dev-silverstock.cloudfunctions.net/checkElectronUpdate?platform=${
-    process.platform
-  }&arch=${process.arch}&version=v${app.getVersion()}`;
+  /*if (process.platform === "win32") {
+    const updateUrl = "IP Address of the FTP server who host the RELEASE + nupkg files";
+  } else {*/
+    const updateUrl = `https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdate?platform=${
+      process.platform
+    }&arch=${process.arch}&version=v${app.getVersion()}`;
+  // }
 
-  autoUpdater.setFeedURL({ url: updateUrl });
+  autoUpdater.setFeedURL(updateUrl);
   
   autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
     const dialogOpts = {
@@ -245,7 +249,7 @@ function createWindow() {
   homeWindow.loadURL(
     process.env.NODE_ENV === "development"
       ? "http://127.0.0.1:3006"
-      : "http://192.168.1.16:3000"
+      : "https://app.silver-smok.com/"
   );
 
   homeWindow.on("show", function () {
