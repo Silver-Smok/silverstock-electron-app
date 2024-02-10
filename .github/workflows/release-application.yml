@@ -84,13 +84,4 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GITHUB_TOKEN: ${{ secrets.github_token }}
           DEBUG: "*"
-          tag: ${{ github.event.release.name }}
-        run: |
-          npm run publish -- --arch=x64 --platform=darwin
-          curl -o RELEASE https://github.com/Silver-Smok/silverstock-electron-app/releases/download/"$tag"/RELEASES
-          echo "https://github.com/Silver-Smok/silverstock-electron-app/releases/download/"$tag"/RELEASES"
-          mv RELEASE updaters/
-          git add .
-          git commit -m "Create updater windows file"
-          git push origin HEAD:master -f
-          git push origin HEAD:"$tag" -f
+        run: npm run publish -- --arch=x64 --platform=darwin
