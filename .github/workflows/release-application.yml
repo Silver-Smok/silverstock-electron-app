@@ -75,19 +75,6 @@ jobs:
           DEBUG: "*"
         run: npm run publish
 
-      - name: Add Windows RELEASE file
-        if: ${{ matrix.os == 'macos-13-xlarge' }}
-        env:
-          tag: ${{ github.event.release.name }}
-        run: |
-          curl -o RELEASE https://github.com/Silver-Smok/silverstock-electron-app/releases/download/"$tag"/RELEASES
-          echo "https://github.com/Silver-Smok/silverstock-electron-app/releases/download/"$tag"/RELEASES"
-          mv RELEASE updaters/
-          git add .
-          git commit -m "Create updater windows file"
-          git push origin HEAD:master -f
-          git push origin HEAD:"$tag" -f
-
       - name: Publish Electron App release (Darwin x64)
         if: ${{ matrix.os == 'macos-13-xlarge' }}
         env:
