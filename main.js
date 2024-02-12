@@ -17,13 +17,9 @@ const startUpdater = () => {
     autoUpdater.checkForUpdates();
   }, 60000);
 
-  /*if (process.platform === "win32") {
-    const updateUrl = "IP Address of the FTP server who host the RELEASE + nupkg files";
-  } else {*/
-    const updateUrl = `https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdate?platform=${
-      process.platform
-    }&arch=${process.arch}&version=v${app.getVersion()}`;
-  // }
+  const updateUrl = `https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdate?platform=${
+    process.platform
+  }&arch=${process.arch}&version=v${app.getVersion()}`;
 
   autoUpdater.setFeedURL(updateUrl);
   
