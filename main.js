@@ -13,8 +13,11 @@ const isDarwin = process.platform === "darwin";
 log.initialize()
 
 const startUpdater = () => {
-  const updateTimeout = setInterval(() => {
-    autoUpdater.checkForUpdates();
+  const updateTimeout = setInterval(async () => {
+    const result = await fetch(`https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdate?platform=${process.platform}&arch=${process.arch}&version=v${app.getVersion()}`)
+    if (result.status !== 204) {
+      autoUpdater.checkForUpdates();
+    }
   }, 60000);
 
   const updateUrl = `https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdate?platform=${
