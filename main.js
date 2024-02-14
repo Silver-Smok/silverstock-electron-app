@@ -10,6 +10,9 @@ let homeWindow;
 let mainWindowState = null;
 let canUpdate = false;
 const isDarwin = process.platform === "darwin";
+const channelUrls = ["http://127.0.0.1:3000", "https://beta.app.silver-smok.com/"];
+let channelSelected = 0;
+
 log.initialize()
 
 const startUpdater = () => {
@@ -248,7 +251,7 @@ function createWindow() {
   homeWindow.loadURL(
     process.env.NODE_ENV === "development"
       ? "http://127.0.0.1:3006"
-      : "https://app.silver-smok.com/"
+      : channelUrls[channelSelected]
   );
 
   homeWindow.on("show", function () {
@@ -306,3 +309,8 @@ ipcMain.on("getBadgeCount", () => {
     homeWindow.webContents.send("badgeCount", app.getBadgeCount());
   }
 });
+
+ipcMain.on("getAppUrl", () => {
+  channelSelected = 0 ? channelSelected = 1 : channelSelected = 0;
+  homeWindow.reload();
+})

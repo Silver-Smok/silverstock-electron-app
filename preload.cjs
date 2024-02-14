@@ -25,6 +25,9 @@ contextBridge.exposeInMainWorld("electron", {
       ipcRenderer.send("checkUpdate");
     })
   },
+  getAppUrl() {
+    ipcRenderer.send("getAppUrl");
+  },
   updateApp() {
     ipcRenderer.send("updateApp");
   },
