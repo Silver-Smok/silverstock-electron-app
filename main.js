@@ -10,7 +10,7 @@ let homeWindow;
 let mainWindowState = null;
 let canUpdate = false;
 const isDarwin = process.platform === "darwin";
-const channelUrls = ["http://127.0.0.1:3000", "https://beta.app.silver-smok.com/"];
+const channelUrls = ["https://app.silver-smok.com/", "https://beta.app.silver-smok.com/"];
 let channelSelected = 0;
 
 log.initialize()
