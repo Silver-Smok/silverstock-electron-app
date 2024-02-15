@@ -10,7 +10,7 @@ let homeWindow;
 let mainWindowState = null;
 let canUpdate = false;
 const isDarwin = process.platform === "darwin";
-const channelUrls = ["http://192.168.1.19:3000", "http://192.168.1.19:3000"];
+const channelUrls = ["https://app.silver-smok.com/", "https://beta.app.silver-smok.com/"];
 let channelSelected = 0;
 
 log.initialize()
@@ -249,11 +249,11 @@ async function createWindow() {
   };
   homeWindow = new BrowserWindow(options);
 
-  const cookies = await session.defaultSession.cookies.get({ url: "http://192.168.1.19" });
+  const cookies = await session.defaultSession.cookies.get({ url: "https://app.silver-smok.com/" });
   
   if (!cookies.length) {
     await session.defaultSession.cookies.set({
-      url: "http://192.168.1.19",
+      url: "https://app.silver-smok.com/",
       name: "channel",
       value: channelSelected.toString(),
     });
@@ -316,18 +316,19 @@ ipcMain.on("getBadgeCount", () => {
   }
 });
 
-ipcMain.on("getAppUrl", async () => {
-  const cookies = await session.defaultSession.cookies.get({ url: "http://192.168.1.19" })
-  
+ipcMain.on("switchAppChannel", async () => {
+  const cookies = await session.defaultSession.cookies.get({ url: "https://app.silver-smok.com/" })
   parseInt(cookies[0].value) === 0 ? channelSelected = 1 : channelSelected = 0;
 
-  log.info('channelSelected', channelSelected);
-
   await session.defaultSession.cookies.set({
-    url: "http://192.168.1.19",
+    url: "https://app.silver-smok.com/",
     name: "channel",
     value: channelSelected.toString(),
   });
   
   homeWindow.loadURL(channelUrls[channelSelected]);
+})
+
+ipcMain.on("getAppChannel", () => {
+  homeWindow.webContents.send("appChannel", channelSelected.toString());
 })
