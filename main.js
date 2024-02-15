@@ -10,7 +10,7 @@ let homeWindow;
 let mainWindowState = null;
 let canUpdate = false;
 const isDarwin = process.platform === "darwin";
-const channelUrls = ["https://app.silver-smok.com/", "https://beta.app.silver-smok.com/"];
+const channelUrls = ["http://192.168.1.19:3000", "http://192.168.1.19:3000"];
 let channelSelected = 0;
 
 log.initialize()
@@ -58,7 +58,7 @@ const startUpdater = () => {
 
 startUpdater();
 
-function createWindow() {
+async function createWindow() {
   const template = [
     {
       label: "Édition",
@@ -248,6 +248,17 @@ function createWindow() {
     },
   };
   homeWindow = new BrowserWindow(options);
+
+  const cookies = await session.defaultSession.cookies.get({ url: "http://192.168.1.19" });
+  
+  if (!cookies.length) {
+    await session.defaultSession.cookies.set({
+      url: "http://192.168.1.19",
+      name: "channel",
+      value: channelSelected.toString(),
+    });
+  }
+
   homeWindow.loadURL(
     process.env.NODE_ENV === "development"
       ? "http://127.0.0.1:3006"
@@ -264,17 +275,12 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", createWindow);
-app.on("ready", function () {
-  session.defaultSession.clearCache(null, () => {
-    app.relaunch();
-    app.exit();
-  });
-});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
+  session.defaultSession.clearCache();
   autoUpdater.quitAndInstall();
   app.quit();
 });
@@ -310,7 +316,18 @@ ipcMain.on("getBadgeCount", () => {
   }
 });
 
-ipcMain.on("getAppUrl", () => {
-  channelSelected = 0 ? channelSelected = 1 : channelSelected = 0;
+ipcMain.on("getAppUrl", async () => {
+  const cookies = await session.defaultSession.cookies.get({ url: "http://192.168.1.19" })
+
+  log.info(cookies);
+  
+  parseInt(cookies[0].value) === 0 ? channelSelected = 1 : channelSelected = 0;
+
+  await session.defaultSession.cookies.set({
+    url: "http://192.168.1.19",
+    name: "channel",
+    value: channelSelected.toString(),
+  });
+  
   homeWindow.reload();
 })
