@@ -318,10 +318,10 @@ ipcMain.on("getBadgeCount", () => {
 
 ipcMain.on("getAppUrl", async () => {
   const cookies = await session.defaultSession.cookies.get({ url: "http://192.168.1.19" })
-
-  log.info(cookies);
   
   parseInt(cookies[0].value) === 0 ? channelSelected = 1 : channelSelected = 0;
+
+  log.info('channelSelected', channelSelected);
 
   await session.defaultSession.cookies.set({
     url: "http://192.168.1.19",
@@ -329,5 +329,5 @@ ipcMain.on("getAppUrl", async () => {
     value: channelSelected.toString(),
   });
   
-  homeWindow.reload();
+  homeWindow.loadURL(channelUrls[channelSelected]);
 })
