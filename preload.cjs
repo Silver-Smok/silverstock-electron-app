@@ -1,13 +1,14 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 let appVersion;
+const newElectronApp = true;
 
 contextBridge.exposeInMainWorld("electron", {
+  features: {
+    autoUpdater: true,
+  },
   openExternalLink(linkref) {
     ipcRenderer.send('openExternalLink', linkref)
-  },
-  appWithUpdater() {
-    return true;
   },
   getAppVersion() {
     return new Promise((resolve) => {
