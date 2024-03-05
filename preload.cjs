@@ -6,6 +6,9 @@ contextBridge.exposeInMainWorld("electron", {
   openExternalLink(linkref) {
     ipcRenderer.send('openExternalLink', linkref)
   },
+  appWithUpdater() {
+    return true;
+  },
   getAppVersion() {
     return new Promise((resolve) => {
       if (appVersion) {
