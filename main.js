@@ -1,6 +1,6 @@
 if (require('electron-squirrel-startup')) return;
 const electron = require("electron");
-const { BrowserWindow, Menu, ipcMain, app, Notification, session, dialog, autoUpdater } = electron;
+const { BrowserWindow, Menu, ipcMain, app, Notification, session, dialog, autoUpdater, shell } = electron;
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
@@ -331,4 +331,8 @@ ipcMain.on("switchAppChannel", async () => {
 
 ipcMain.on("getAppChannel", () => {
   homeWindow.webContents.send("appChannel", channelSelected.toString());
+})
+
+ipcMain.on('openExternalLink', (event, linkref) => {
+  shell.openExternal(linkref)
 })

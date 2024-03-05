@@ -1,9 +1,11 @@
-const { contextBridge, ipcRenderer, shell } = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 
 let appVersion;
 
 contextBridge.exposeInMainWorld("electron", {
-  shell,
+  openExternalLink(linkref) {
+    ipcRenderer.send('openExternalLink', linkref)
+  },
   getAppVersion() {
     return new Promise((resolve) => {
       if (appVersion) {
