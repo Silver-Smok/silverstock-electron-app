@@ -22,14 +22,6 @@ contextBridge.exposeInMainWorld("electron", {
       ipcRenderer.send("getAppVersion");
     });
   },
-  checkUpdate() {
-    return new Promise((resolve) => {
-      ipcRenderer.once("canUpdate", (event, canUpdate) => {
-        resolve(canUpdate);
-      })
-      ipcRenderer.send("checkUpdate");
-    })
-  },
   switchAppChannel() {
     ipcRenderer.send("switchAppChannel");
   },

@@ -8,7 +8,6 @@ const log = require("electron-log/main");
 
 let homeWindow;
 let mainWindowState = null;
-let canUpdate = false;
 const isDarwin = process.platform === "darwin";
 const channelUrls = ["https://app.silver-smok.com/", "https://beta.app.silver-smok.com/"];
 let channelSelected = 0;
@@ -295,10 +294,6 @@ ipcMain.on("getAppVersion", () => {
 ipcMain.on("getPlatform", () => {
   homeWindow.webContents.send("platform", process.platform);
 });
-
-ipcMain.on("checkUpdate", () => {
-  homeWindow.webContents.send("canUpdate", canUpdate);
-})
 
 ipcMain.on("updateApp", () => {
   autoUpdater.quitAndInstall();
