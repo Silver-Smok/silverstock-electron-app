@@ -49,6 +49,15 @@ const startUpdater = () => {
     });
   });
   
+
+  autoUpdater.on("update-available", () => {
+    log.error("Mise à jour disponible");
+  });
+
+  autoUpdater.on("update-not-available", () => {
+    log.error("Aucune mise à jour disponible", autoUpdater.getFeedURL());
+  });
+  
   autoUpdater.on("error", (message) => {
     log.error("Problème lors de la mise à jour de l'application.");
     log.error(message);
