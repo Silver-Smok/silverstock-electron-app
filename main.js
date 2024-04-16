@@ -331,3 +331,7 @@ ipcMain.on("getAppChannel", () => {
 ipcMain.on('openExternalLink', (event, linkref) => {
   shell.openExternal(linkref)
 })
+
+ipcMain.on('reloadWithoutCache', () => {
+  homeWindow.webContents.reloadIgnoringCache();
+})

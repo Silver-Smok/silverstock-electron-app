@@ -52,4 +52,7 @@ contextBridge.exposeInMainWorld("electron", {
       ipcRenderer.send("getBadgeCount");
     });
   },
+  reloadWithoutCache() {
+    ipcRenderer.send("reloadWithoutCache");
+  },
 });
