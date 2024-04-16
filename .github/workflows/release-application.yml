@@ -23,6 +23,10 @@ jobs:
         with:
           node-version: "20"
 
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
       - name: Add MacOS Certificate
         if: ${{ matrix.os == 'macos-13-xlarge' }}
         env:
