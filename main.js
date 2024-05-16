@@ -5,6 +5,7 @@ const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
 const log = require("electron-log/main");
+const getMAC = require('getmac');
 
 let homeWindow;
 let mainWindowState = null;
@@ -334,4 +335,8 @@ ipcMain.on('openExternalLink', (event, linkref) => {
 
 ipcMain.on('reloadWithoutCache', () => {
   homeWindow.webContents.reloadIgnoringCache();
+})
+
+ipcMain.on('getMacAddress', () => {
+  homeWindow.webContents.send("getMacAddress", getMAC);
 })

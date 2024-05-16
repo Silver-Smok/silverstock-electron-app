@@ -22,6 +22,14 @@ contextBridge.exposeInMainWorld("electron", {
       ipcRenderer.send("getAppVersion");
     });
   },
+  getMacAddress() {
+    return new Promise((resolve) => {
+      ipcRenderer.once("getMacAddress", (event, macAddress) => {
+        resolve(macAddress);
+      });
+      ipcRenderer.send("getMacAddress");
+    });
+  },
   switchAppChannel() {
     ipcRenderer.send("switchAppChannel");
   },

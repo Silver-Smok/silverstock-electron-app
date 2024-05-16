@@ -1,13 +1,13 @@
 {
   "name": "silverstock-electron-app",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "SilverStock electron app",
   "main": "main.js",
   "scripts": {
     "dev": "NODE_ENV=development electron .",
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "source .env && electron-forge make",
+    "make": "electron-forge make",
     "publish": "electron-forge publish"
   },
   "author": "Julien Duizabo",
@@ -31,6 +31,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "6.1.7",
     "electron-window-state": "5.0.3",
+    "getmac": "6.6.0",
     "update-electron-app": "3.0.0"
   },
   "repository": {
