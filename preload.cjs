@@ -30,6 +30,14 @@ contextBridge.exposeInMainWorld("electron", {
       ipcRenderer.send("getMacAddress");
     });
   },
+  getComputerHostname() {
+    return new Promise((resolve) => {
+      ipcRenderer.once("computerHostname", (event, hostname) => {
+        resolve(hostname);
+      });
+      ipcRenderer.send("getComputerHostname");
+    });
+  },
   switchAppChannel() {
     ipcRenderer.send("switchAppChannel");
   },
