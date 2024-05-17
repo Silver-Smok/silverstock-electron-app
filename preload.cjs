@@ -5,6 +5,7 @@ let appVersion;
 contextBridge.exposeInMainWorld("electron", {
   features: {
     autoUpdater: true,
+    clientInfo: true
   },
   openExternalLink(linkref) {
     ipcRenderer.send('openExternalLink', linkref)
