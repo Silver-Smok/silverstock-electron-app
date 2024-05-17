@@ -23,20 +23,17 @@ contextBridge.exposeInMainWorld("electron", {
       ipcRenderer.send("getAppVersion");
     });
   },
-  getMacAddress() {
+  getClientInformations() {
     return new Promise((resolve) => {
-      ipcRenderer.once("getMacAddress", (event, macAddress) => {
-        resolve(macAddress);
+      ipcRenderer.once("clientInformations", (event, macAddress, hostname, electronVersion) => {
+        const data = {
+          macAddress: macAddress,
+          hostname: hostname,
+          electronVersion: electronVersion
+        }
+        resolve(data);
       });
-      ipcRenderer.send("getMacAddress");
-    });
-  },
-  getComputerHostname() {
-    return new Promise((resolve) => {
-      ipcRenderer.once("computerHostname", (event, hostname) => {
-        resolve(hostname);
-      });
-      ipcRenderer.send("getComputerHostname");
+      ipcRenderer.send("getClientInformations");
     });
   },
   switchAppChannel() {

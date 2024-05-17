@@ -338,10 +338,6 @@ ipcMain.on('reloadWithoutCache', () => {
   homeWindow.webContents.reloadIgnoringCache();
 })
 
-ipcMain.on('getMacAddress', () => {
-  homeWindow.webContents.send("getMacAddress", getmac());
+ipcMain.on('getClientInformations', () => {
+  homeWindow.webContents.send("clientInformations", getmac(), os.hostname(), app.getVersion());
 })
-
-ipcMain.on("getComputerHostname", () => {
-  homeWindow.webContents.send("computerHostname", os.hostname());
-});
