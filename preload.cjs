@@ -5,6 +5,7 @@ let appVersion;
 contextBridge.exposeInMainWorld("electron", {
   features: {
     autoUpdater: true,
+    clientInfo: true
   },
   openExternalLink(linkref) {
     ipcRenderer.send('openExternalLink', linkref)
@@ -20,6 +21,19 @@ contextBridge.exposeInMainWorld("electron", {
         resolve(version);
       });
       ipcRenderer.send("getAppVersion");
+    });
+  },
+  getClientInformations() {
+    return new Promise((resolve) => {
+      ipcRenderer.once("clientInformations", (event, macAddress, hostname, electronVersion) => {
+        const data = {
+          macAddress: macAddress,
+          hostname: hostname,
+          electronVersion: electronVersion
+        }
+        resolve(data);
+      });
+      ipcRenderer.send("getClientInformations");
     });
   },
   switchAppChannel() {

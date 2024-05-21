@@ -5,6 +5,8 @@ const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
 const log = require("electron-log/main");
+const getmac = require('getmac').default;
+const os = require('os'); 
 
 let homeWindow;
 let mainWindowState = null;
@@ -260,7 +262,7 @@ async function createWindow() {
 
   homeWindow.loadURL(
     process.env.NODE_ENV === "development"
-      ? "http://127.0.0.1:3006"
+      ? "http://127.0.0.1:3000"
       : channelUrls[channelSelected]
   );
 
@@ -334,4 +336,8 @@ ipcMain.on('openExternalLink', (event, linkref) => {
 
 ipcMain.on('reloadWithoutCache', () => {
   homeWindow.webContents.reloadIgnoringCache();
+})
+
+ipcMain.on('getClientInformations', () => {
+  homeWindow.webContents.send("clientInformations", getmac(), os.hostname(), app.getVersion());
 })
