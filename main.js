@@ -76,6 +76,10 @@ async function createWindow() {
           label: "Coller",
           role: "paste",
         },
+        {
+          label: "Tout selectionner",
+          role: "selectAll"
+        }
       ],
     },
     {
