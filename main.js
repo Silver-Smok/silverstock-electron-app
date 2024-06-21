@@ -52,8 +52,10 @@ const startUpdater = () => {
   });
   
   autoUpdater.on("error", (message) => {
-    log.error("Problème lors de la mise à jour de l'application.");
-    log.error(message);
+    if (message != "Error: No update available, can't quit and install") {
+      log.error("Problème lors de la mise à jour de l'application.");
+      log.error(message);
+    }
   });
 };
 
