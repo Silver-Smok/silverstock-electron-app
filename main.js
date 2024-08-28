@@ -268,7 +268,7 @@ async function createWindow() {
 
   homeWindow.loadURL(
     process.env.NODE_ENV === "development"
-      ? "http://127.0.0.1:3000"
+      ? "http://127.0.0.1:3006"
       : channelUrls[channelSelected]
   );
 
@@ -320,15 +320,28 @@ ipcMain.on("getBadgeCount", () => {
 });
 
 ipcMain.on("switchAppChannel", async () => {
-  const cookies = await session.defaultSession.cookies.get({ url: "https://app.silver-smok.com/" })
-  parseInt(cookies[0].value) === 0 ? channelSelected = 1 : channelSelected = 0;
-
-  await session.defaultSession.cookies.set({
-    url: "https://app.silver-smok.com/",
-    name: "channel",
-    value: channelSelected.toString(),
-  });
   
+  const prodCookies = await session.defaultSession.cookies.get({ url: "https://app.silver-smok.com/" });
+  const betaCookies = await session.defaultSession.cookies.get({ url: "https://beta.app.silver-smok.com/" });
+
+  channelSelected == 0 ? channelSelected = 1 : channelSelected = 0;
+
+  if (prodCookies) {
+    await session.defaultSession.cookies.remove("https://app.silver-smok.com/", "channel")
+    await session.defaultSession.cookies.set({
+      url: "https://beta.app.silver-smok.com/",
+      name: "channel",
+      value: "1",
+    });
+  } else if (betaCookies) {
+    await session.defaultSession.cookies.remove("https://beta.app.silver-smok.com/", "channel")
+    await session.defaultSession.cookies.set({
+      url: "https://app.silver-smok.com/",
+      name: "channel",
+      value: "0",
+    });
+  }
+
   homeWindow.loadURL(channelUrls[channelSelected]);
 })
 
@@ -347,3 +360,17 @@ ipcMain.on('reloadWithoutCache', () => {
 ipcMain.on('getClientInformations', () => {
   homeWindow.webContents.send("clientInformations", getmac(), os.hostname(), app.getVersion());
 })
+
+ipcMain.on("changeToBeta", async (event, customerName) =>{
+  if (channelSelected.toString() === "0" && customerName === "Silver-Smok") {
+    channelSelected = 1;
+
+    await session.defaultSession.cookies.set({
+      url: "https://beta.app.silver-smok.com/",
+      name: "channel",
+      value: channelSelected.toString(),
+    });
+    
+    homeWindow.loadURL(channelUrls[channelSelected])
+  }
+});
