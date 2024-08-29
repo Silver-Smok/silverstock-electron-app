@@ -5,7 +5,8 @@ let appVersion;
 contextBridge.exposeInMainWorld("electron", {
   features: {
     autoUpdater: true,
-    clientInfo: true
+    clientInfo: true,
+    forceBeta: true
   },
   openExternalLink(linkref) {
     ipcRenderer.send('openExternalLink', linkref)
@@ -69,4 +70,7 @@ contextBridge.exposeInMainWorld("electron", {
   reloadWithoutCache() {
     ipcRenderer.send("reloadWithoutCache");
   },
+  changeToBeta(companyName) {
+    ipcRenderer.send("changeToBeta", companyName);
+  }
 });
