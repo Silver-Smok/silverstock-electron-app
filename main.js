@@ -13,6 +13,7 @@ let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
 const channelUrls = ["https://app.silver-smok.com/", "https://beta.app.silver-smok.com/"];
 let channelSelected = 0;
+let forceProdEnv = false;
 
 log.initialize()
 
@@ -324,24 +325,25 @@ ipcMain.on("switchAppChannel", async () => {
   const prodCookies = await session.defaultSession.cookies.get({ url: "https://app.silver-smok.com/" });
   const betaCookies = await session.defaultSession.cookies.get({ url: "https://beta.app.silver-smok.com/" });
 
-  channelSelected == 0 ? channelSelected = 1 : channelSelected = 0;
+  prodCookies.length ? channelSelected = 1 : channelSelected = 0;
 
   if (prodCookies) {
     await session.defaultSession.cookies.remove("https://app.silver-smok.com/", "channel")
     await session.defaultSession.cookies.set({
       url: "https://beta.app.silver-smok.com/",
       name: "channel",
-      value: "1",
+      value: channelSelected.toString(),
     });
   } else if (betaCookies) {
     await session.defaultSession.cookies.remove("https://beta.app.silver-smok.com/", "channel")
     await session.defaultSession.cookies.set({
       url: "https://app.silver-smok.com/",
       name: "channel",
-      value: "0",
+      value: channelSelected.toString(),
     });
   }
 
+  forceProdEnv = !forceProdEnv;
   homeWindow.loadURL(channelUrls[channelSelected]);
 })
 
@@ -362,9 +364,10 @@ ipcMain.on('getClientInformations', () => {
 })
 
 ipcMain.on("changeToBeta", async (event, customerName) =>{
-  if (channelSelected.toString() === "0" && customerName === "Silver-Smok") {
+  if (channelSelected.toString() === "0" && customerName === "Silver-Smok" && !forceProdEnv) {
     channelSelected = 1;
 
+    await session.defaultSession.cookies.remove("https://app.silver-smok.com/", "channel")
     await session.defaultSession.cookies.set({
       url: "https://beta.app.silver-smok.com/",
       name: "channel",
