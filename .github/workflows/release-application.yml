@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-13-xlarge, windows-latest]
+        os: [macos-latest-xlarge, windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -28,7 +28,7 @@ jobs:
           python-version: '3.10'
 
       - name: Add MacOS Certificate
-        if: ${{ matrix.os == 'macos-13-xlarge' }}
+        if: ${{ matrix.os == 'macos-latest-xlarge' }}
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_DATA}}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
@@ -51,7 +51,7 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
 
       - name: Create updater json files (Darwin)
-        if: ${{ matrix.os == 'macos-13-xlarge' }}
+        if: ${{ matrix.os == 'macos-latest-xlarge' }}
         env:
           tag: ${{ github.event.release.name }}
           description: ${{ github.event.release.body }}
@@ -80,7 +80,7 @@ jobs:
         run: npm run publish
 
       - name: Publish Electron App release (Darwin x64)
-        if: ${{ matrix.os == 'macos-13-xlarge' }}
+        if: ${{ matrix.os == 'macos-latest-xlarge' }}
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
