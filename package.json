@@ -1,6 +1,6 @@
 {
   "name": "silverstock-electron-app",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "SilverStock electron app",
   "main": "main.js",
   "scripts": {
