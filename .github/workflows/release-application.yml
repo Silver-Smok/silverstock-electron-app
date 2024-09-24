@@ -131,6 +131,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GITHUB_TOKEN: ${{ secrets.github_token }}
           DEBUG: "*"
+          ELECTRON_FORGE_MAKER_ZIP_NAME: "SilverStock-darwin-legacy-arm64-${{ github.event.release.name }}.zip"
         run: npm run publish -- --arch=arm64 --platform=darwin
 
       - name: Publish Electron Legacy App release (Darwin - x64)
@@ -142,4 +143,5 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GITHUB_TOKEN: ${{ secrets.github_token }}
           DEBUG: "*"
+          ELECTRON_FORGE_MAKER_ZIP_NAME: "SilverStock-darwin-legacy-x64-${{ github.event.release.name }}.zip"
         run: npm run publish -- --arch=x64 --platform=darwin
