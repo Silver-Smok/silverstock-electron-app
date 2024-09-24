@@ -3,7 +3,7 @@ run-name: build-release
 on:
   release:
     types: [released]
-  
+
 jobs:
   release-electron-application:
     runs-on: ${{ matrix.os }}
@@ -25,7 +25,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: Add MacOS Certificate
         if: ${{ matrix.os == 'macos-latest-xlarge' }}
@@ -40,12 +40,12 @@ jobs:
 
           # import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-    
+
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-    
+
           # import certificate to keychain
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
@@ -55,7 +55,7 @@ jobs:
         env:
           tag: ${{ github.event.release.name }}
           description: ${{ github.event.release.body }}
-        run : |
+        run: |
           mkdir -p updaters
           tagNoVersion=$(echo "$tag" | sed 's/v//')
           echo "{\"name\":\"$tag\",\"notes\":\"$description\",\"url\":\"https://github.com/Silver-Smok/silverstock-electron-app/releases/download/$tag/SilverStock-darwin-x64-$tagNoVersion.zip\"}" > darwin-x64.json
@@ -65,10 +65,14 @@ jobs:
           git commit --allow-empty -m "Create updaters files"
           git push origin HEAD:master -f
           git push origin HEAD:"$tag" -f
-          
+
       - name: Install dependencies
-        run: npm ci    
-        
+        run: npm ci
+
+      - name: Install Macos appdmg dependencies
+        if: ${{ matrix.os == 'macos-latest-xlarge' }}
+        run: npm i appdmg@0.6.6
+
       - name: Publish Electron App release (Windows and Darwin arm64)
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
