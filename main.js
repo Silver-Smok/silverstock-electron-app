@@ -1,36 +1,57 @@
-if (require('electron-squirrel-startup')) return;
+if (require("electron-squirrel-startup")) return;
 const electron = require("electron");
-const { BrowserWindow, Menu, ipcMain, app, Notification, session, dialog, autoUpdater, shell } = electron;
+const {
+  BrowserWindow,
+  Menu,
+  ipcMain,
+  app,
+  Notification,
+  session,
+  dialog,
+  autoUpdater,
+  shell,
+} = electron;
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
 const log = require("electron-log/main");
-const getmac = require('getmac').default;
-const os = require('os'); 
+const getmac = require("getmac").default;
+const os = require("os");
 
 let homeWindow;
 let mainWindowState = null;
 const isDarwin = process.platform === "darwin";
-const channelUrls = ["https://app.silver-smok.com/", "https://beta.app.silver-smok.com/"];
+const channelUrls = [
+  "https://app.silver-smok.com/",
+  "https://beta.app.silver-smok.com/",
+];
 let channelSelected = 0;
 let forceProdEnv = false;
 
-log.initialize()
+log.initialize();
 
 const startUpdater = () => {
   const updateTimeout = setInterval(async () => {
-    const result = await fetch(`https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdate?platform=${process.platform}&arch=${process.arch}&version=v${app.getVersion()}`)
+    const result = await fetch(
+      `https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdateWithElectronVersion?platform=${
+        process.platform
+      }&arch=${process.arch}&version=v${app.getVersion()}&electronVersion=${
+        process.versions.electron
+      }`
+    );
     if (result.status !== 204) {
       autoUpdater.checkForUpdates();
     }
   }, 60000);
 
-  const updateUrl = `https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdate?platform=${
+  const updateUrl = `https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdateWithElectronVersion?platform=${
     process.platform
-  }&arch=${process.arch}&version=v${app.getVersion()}`;
+  }&arch=${process.arch}&version=v${app.getVersion()}&electronVersion=${
+    process.versions.electron
+  }`;
 
   autoUpdater.setFeedURL(updateUrl);
-  
+
   autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
     const dialogOpts = {
       type: "info",
@@ -51,7 +72,7 @@ const startUpdater = () => {
       }
     });
   });
-  
+
   autoUpdater.on("error", (message) => {
     if (message != "Error: No update available, can't quit and install") {
       log.error("Problème lors de la mise à jour de l'application.");
@@ -81,8 +102,8 @@ async function createWindow() {
         },
         {
           label: "Tout selectionner",
-          role: "selectAll"
-        }
+          role: "selectAll",
+        },
       ],
     },
     {
@@ -257,8 +278,10 @@ async function createWindow() {
   };
   homeWindow = new BrowserWindow(options);
 
-  const cookies = await session.defaultSession.cookies.get({ url: "https://app.silver-smok.com/" });
-  
+  const cookies = await session.defaultSession.cookies.get({
+    url: "https://app.silver-smok.com/",
+  });
+
   if (!cookies.length) {
     await session.defaultSession.cookies.set({
       url: "https://app.silver-smok.com/",
@@ -306,7 +329,7 @@ ipcMain.on("getPlatform", () => {
 
 ipcMain.on("updateApp", () => {
   autoUpdater.quitAndInstall();
-})
+});
 
 ipcMain.on("setBadgeCount", (event, count) => {
   if (isDarwin) {
@@ -321,21 +344,30 @@ ipcMain.on("getBadgeCount", () => {
 });
 
 ipcMain.on("switchAppChannel", async () => {
-  
-  const prodCookies = await session.defaultSession.cookies.get({ url: "https://app.silver-smok.com/" });
-  const betaCookies = await session.defaultSession.cookies.get({ url: "https://beta.app.silver-smok.com/" });
+  const prodCookies = await session.defaultSession.cookies.get({
+    url: "https://app.silver-smok.com/",
+  });
+  const betaCookies = await session.defaultSession.cookies.get({
+    url: "https://beta.app.silver-smok.com/",
+  });
 
-  prodCookies.length ? channelSelected = 1 : channelSelected = 0;
+  prodCookies.length ? (channelSelected = 1) : (channelSelected = 0);
 
   if (prodCookies) {
-    await session.defaultSession.cookies.remove("https://app.silver-smok.com/", "channel")
+    await session.defaultSession.cookies.remove(
+      "https://app.silver-smok.com/",
+      "channel"
+    );
     await session.defaultSession.cookies.set({
       url: "https://beta.app.silver-smok.com/",
       name: "channel",
       value: channelSelected.toString(),
     });
   } else if (betaCookies) {
-    await session.defaultSession.cookies.remove("https://beta.app.silver-smok.com/", "channel")
+    await session.defaultSession.cookies.remove(
+      "https://beta.app.silver-smok.com/",
+      "channel"
+    );
     await session.defaultSession.cookies.set({
       url: "https://app.silver-smok.com/",
       name: "channel",
@@ -345,35 +377,47 @@ ipcMain.on("switchAppChannel", async () => {
 
   forceProdEnv = !forceProdEnv;
   homeWindow.loadURL(channelUrls[channelSelected]);
-})
+});
 
 ipcMain.on("getAppChannel", () => {
   homeWindow.webContents.send("appChannel", channelSelected.toString());
-})
+});
 
-ipcMain.on('openExternalLink', (event, linkref) => {
-  shell.openExternal(linkref)
-})
+ipcMain.on("openExternalLink", (event, linkref) => {
+  shell.openExternal(linkref);
+});
 
-ipcMain.on('reloadWithoutCache', () => {
+ipcMain.on("reloadWithoutCache", () => {
   homeWindow.webContents.reloadIgnoringCache();
-})
+});
 
-ipcMain.on('getClientInformations', () => {
-  homeWindow.webContents.send("clientInformations", getmac(), os.hostname(), app.getVersion());
-})
+ipcMain.on("getClientInformations", () => {
+  homeWindow.webContents.send(
+    "clientInformations",
+    getmac(),
+    os.hostname(),
+    app.getVersion()
+  );
+});
 
-ipcMain.on("changeToBeta", async (event, customerName) =>{
-  if (channelSelected.toString() === "0" && customerName === "Silver-Smok" && !forceProdEnv) {
+ipcMain.on("changeToBeta", async (event, customerName) => {
+  if (
+    channelSelected.toString() === "0" &&
+    customerName === "Silver-Smok" &&
+    !forceProdEnv
+  ) {
     channelSelected = 1;
 
-    await session.defaultSession.cookies.remove("https://app.silver-smok.com/", "channel")
+    await session.defaultSession.cookies.remove(
+      "https://app.silver-smok.com/",
+      "channel"
+    );
     await session.defaultSession.cookies.set({
       url: "https://beta.app.silver-smok.com/",
       name: "channel",
       value: channelSelected.toString(),
     });
-    
-    homeWindow.loadURL(channelUrls[channelSelected])
+
+    homeWindow.loadURL(channelUrls[channelSelected]);
   }
 });
