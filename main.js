@@ -261,7 +261,7 @@ async function createWindow() {
     backgroundColor: "#fffff",
     width: mainWindowState.width,
     height: mainWindowState.height,
-    minWidth: 1200,
+    minWidth: 900,
     minHeight: 650,
     x: mainWindowState.x,
     y: mainWindowState.y,
