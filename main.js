@@ -15,8 +15,6 @@ const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 require("electron-context-menu");
 const log = require("electron-log/main");
-const getmac = require("getmac").default;
-const os = require("os");
 
 let homeWindow;
 let mainWindowState = null;
@@ -42,7 +40,7 @@ const startUpdater = () => {
     if (result.status !== 204) {
       autoUpdater.checkForUpdates();
     }
-  }, 60000);
+  }, 358354);
 
   const updateUrl = `https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdateWithElectronVersion?platform=${
     process.platform
@@ -68,7 +66,7 @@ const startUpdater = () => {
       if (returnValue.response === 0) {
         autoUpdater.quitAndInstall();
       } else {
-        cancelTimeout(updateTimeout);
+        clearInterval(updateTimeout);
       }
     });
   });
@@ -82,6 +80,30 @@ const startUpdater = () => {
 };
 
 startUpdater();
+
+// Ajout du code pour makeSingleInstance
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", (event, commandLine, workingDirectory) => {
+    // On macOS, nous devons manuellement activer l'application lorsque nous recevons un événement 'second-instance'
+    if (homeWindow) {
+      if (homeWindow.isMinimized()) homeWindow.restore();
+      homeWindow.focus();
+    }
+  });
+
+  // Créer la fenêtre principale lorsque l'application est prête
+  app.on("ready", createWindow);
+
+  app.on("activate", function () {
+    // Sur macOS, il est courant de recréer une fenêtre dans l'application lorsque
+    // l'icône du dock est cliquée et qu'il n'y a pas d'autres fenêtres ouvertes.
+    if (homeWindow === null) createWindow();
+  });
+}
 
 async function createWindow() {
   const template = [
@@ -302,11 +324,6 @@ async function createWindow() {
   new Notification();
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
-
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
   // On OS X it is common for applications and their menu bar
@@ -344,16 +361,8 @@ ipcMain.on("getBadgeCount", () => {
 });
 
 ipcMain.on("switchAppChannel", async () => {
-  const prodCookies = await session.defaultSession.cookies.get({
-    url: "https://app.silver-smok.com/",
-  });
-  const betaCookies = await session.defaultSession.cookies.get({
-    url: "https://beta.app.silver-smok.com/",
-  });
-
-  prodCookies.length ? (channelSelected = 1) : (channelSelected = 0);
-
-  if (prodCookies) {
+  if (channelSelected === 0) {
+    channelSelected = 1;
     await session.defaultSession.cookies.remove(
       "https://app.silver-smok.com/",
       "channel"
@@ -363,7 +372,8 @@ ipcMain.on("switchAppChannel", async () => {
       name: "channel",
       value: channelSelected.toString(),
     });
-  } else if (betaCookies) {
+  } else {
+    channelSelected = 0;
     await session.defaultSession.cookies.remove(
       "https://beta.app.silver-smok.com/",
       "channel"
@@ -389,15 +399,6 @@ ipcMain.on("openExternalLink", (event, linkref) => {
 
 ipcMain.on("reloadWithoutCache", () => {
   homeWindow.webContents.reloadIgnoringCache();
-});
-
-ipcMain.on("getClientInformations", () => {
-  homeWindow.webContents.send(
-    "clientInformations",
-    getmac(),
-    os.hostname(),
-    app.getVersion()
-  );
 });
 
 ipcMain.on("changeToBeta", async (event, customerName) => {
