@@ -1,4 +1,5 @@
 if (require("electron-squirrel-startup")) return;
+require("dotenv").config();
 const electron = require("electron");
 const {
   BrowserWindow,
@@ -16,40 +17,37 @@ const path = require("path");
 require("electron-context-menu");
 const log = require("electron-log/main");
 
+const IS_DARWIN = process.platform === "darwin";
+const DEV_URL = "http://localhost:3000";
+const PROD_URL = "https://app.silver-smok.com/";
+const BETA_URL = "https://beta.app.silver-smok.com/";
+const CHANNELS = {
+  0: PROD_URL,
+  1: BETA_URL,
+};
+const BASE_URL =
+  "https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdate";
+const UPDATE_URL = `${BASE_URL}?platform=${process.platform}&arch=${process.arch}&version=v${app.getVersion()}&electronVersion=${process.versions.electron}`;
+
 let homeWindow;
 let mainWindowState = null;
-const isDarwin = process.platform === "darwin";
-const channelUrls = [
-  "https://app.silver-smok.com/",
-  "https://beta.app.silver-smok.com/",
-];
-let channelSelected = 0;
+let selectedChannel = "0";
 let forceProdEnv = false;
 
 log.initialize();
 
+// Initialize built-in auto-updater
 const startUpdater = () => {
   const updateTimeout = setInterval(async () => {
-    const result = await fetch(
-      `https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdateWithElectronVersion?platform=${
-        process.platform
-      }&arch=${process.arch}&version=v${app.getVersion()}&electronVersion=${
-        process.versions.electron
-      }`
-    );
+    const result = await fetch(UPDATE_URL);
     if (result.status !== 204) {
       autoUpdater.checkForUpdates();
     }
-  }, 358354);
+  }, 300000); // Check every 5 minutes
 
-  const updateUrl = `https://europe-west1-silver-smok-admin.cloudfunctions.net/checkElectronUpdateWithElectronVersion?platform=${
-    process.platform
-  }&arch=${process.arch}&version=v${app.getVersion()}&electronVersion=${
-    process.versions.electron
-  }`;
+  autoUpdater.setFeedURL(UPDATE_URL);
 
-  autoUpdater.setFeedURL(updateUrl);
-
+  // New update available - notify the renderer process
   autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
     const dialogOpts = {
       type: "info",
@@ -71,6 +69,7 @@ const startUpdater = () => {
     });
   });
 
+  // Error during update check
   autoUpdater.on("error", (message) => {
     if (message != "Error: No update available, can't quit and install") {
       log.error("Problème lors de la mise à jour de l'application.");
@@ -81,26 +80,26 @@ const startUpdater = () => {
 
 startUpdater();
 
-// Ajout du code pour makeSingleInstance
+// Single app instance lock to prevent multiple instances
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
   app.quit();
 } else {
   app.on("second-instance", (event, commandLine, workingDirectory) => {
-    // On macOS, nous devons manuellement activer l'application lorsque nous recevons un événement 'second-instance'
+    // On macOS, we need to manually focus the app when we receive a 'second-instance' event
     if (homeWindow) {
       if (homeWindow.isMinimized()) homeWindow.restore();
       homeWindow.focus();
     }
   });
 
-  // Créer la fenêtre principale lorsque l'application est prête
+  // Create the main window when the application is ready
   app.on("ready", createWindow);
 
   app.on("activate", function () {
-    // Sur macOS, il est courant de recréer une fenêtre dans l'application lorsque
-    // l'icône du dock est cliquée et qu'il n'y a pas d'autres fenêtres ouvertes.
+    // On macOS, it is common to recreate a window in the app when
+    // the dock icon is clicked and there are no other windows open.
     if (homeWindow === null) createWindow();
   });
 }
@@ -175,7 +174,7 @@ async function createWindow() {
         },
         {
           label: "Activer les outils de développement",
-          accelerator: isDarwin ? "Alt+Command+I" : "Ctrl+Shift+I",
+          accelerator: IS_DARWIN ? "Alt+Command+I" : "Ctrl+Shift+I",
           click(item, focusedWindow) {
             if (focusedWindow) {
               homeWindow.webContents.toggleDevTools();
@@ -202,7 +201,7 @@ async function createWindow() {
     },
   ];
 
-  if (isDarwin) {
+  if (IS_DARWIN) {
     template.unshift({
       label: "SilverStock",
       submenu: [
@@ -254,7 +253,8 @@ async function createWindow() {
     );
   }
 
-  session.defaultSession.webRequest.onHeadersReceived(
+  const currentSession = session.defaultSession;
+  currentSession.webRequest.onHeadersReceived(
     { urls: ["https://*.hiboutik.com/"] },
     (details, callback) => {
       if (
@@ -300,24 +300,24 @@ async function createWindow() {
   };
   homeWindow = new BrowserWindow(options);
 
-  const cookies = await session.defaultSession.cookies.get({
-    url: "https://app.silver-smok.com/",
+  const cookies = await currentSession.cookies.get({
+    url: PROD_URL,
   });
 
   if (!cookies.length) {
-    await session.defaultSession.cookies.set({
-      url: "https://app.silver-smok.com/",
+    await currentSession.cookies.set({
+      url: PROD_URL,
       name: "channel",
-      value: channelSelected.toString(),
+      value: selectedChannel,
     });
   }
 
-  homeWindow.loadURL(
+  const url =
     process.env.NODE_ENV === "development"
-      ? "http://127.0.0.1:3006"
-      : channelUrls[channelSelected]
-  );
+      ? DEV_URL
+      : CHANNELS[selectedChannel];
 
+  homeWindow.loadURL(url);
   homeWindow.on("show", function () {
     mainWindowState.manage(homeWindow);
   });
@@ -333,92 +333,107 @@ app.on("window-all-closed", function () {
   app.quit();
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-
+// Provide app version to renderer
 ipcMain.on("getAppVersion", () => {
   homeWindow.webContents.send("appVersion", app.getVersion());
 });
 
+// Provide platform info to renderer
 ipcMain.on("getPlatform", () => {
   homeWindow.webContents.send("platform", process.platform);
 });
 
+// Handle app update request from renderer
 ipcMain.on("updateApp", () => {
   autoUpdater.quitAndInstall();
 });
 
+// Set badge count on macOS
 ipcMain.on("setBadgeCount", (event, count) => {
-  if (isDarwin) {
+  if (IS_DARWIN) {
     app.setBadgeCount(count);
   }
 });
 
+// Provide current badge count to renderer
 ipcMain.on("getBadgeCount", () => {
-  if (isDarwin) {
+  if (IS_DARWIN) {
     homeWindow.webContents.send("badgeCount", app.getBadgeCount());
   }
 });
 
+// Handle channel switching
 ipcMain.on("switchAppChannel", async () => {
-  if (channelSelected === 0) {
-    channelSelected = 1;
-    await session.defaultSession.cookies.remove(
-      "https://app.silver-smok.com/",
-      "channel"
-    );
-    await session.defaultSession.cookies.set({
-      url: "https://beta.app.silver-smok.com/",
-      name: "channel",
-      value: channelSelected.toString(),
-    });
-  } else {
-    channelSelected = 0;
-    await session.defaultSession.cookies.remove(
-      "https://beta.app.silver-smok.com/",
-      "channel"
-    );
-    await session.defaultSession.cookies.set({
-      url: "https://app.silver-smok.com/",
-      name: "channel",
-      value: channelSelected.toString(),
-    });
-  }
+  const currentSession = session.defaultSession;
 
+  // Clear channel related cookies
+  await currentSession.clearStorageData({
+    storages: ["cookies"],
+  });
+
+  // Clear Firebase IndexedDB to avoid auth issues when switching channels
+  await homeWindow.webContents.executeJavaScript(
+    `indexedDB.deleteDatabase('firebaseLocalStorageDb');`
+  );
+
+  // Switch channel and set cookie
+  selectedChannel = selectedChannel === "0" ? "1" : "0";
+  await currentSession.cookies.set({
+    url: CHANNELS[selectedChannel],
+    name: "channel",
+    value: selectedChannel,
+  });
+
+  // Reload app with new channel
   forceProdEnv = !forceProdEnv;
-  homeWindow.loadURL(channelUrls[channelSelected]);
+  homeWindow.loadURL(CHANNELS[selectedChannel]);
 });
 
+// Provide current channel to renderer
 ipcMain.on("getAppChannel", () => {
-  homeWindow.webContents.send("appChannel", channelSelected.toString());
+  homeWindow.webContents.send("appChannel", selectedChannel);
 });
 
+// Open external links in default browser
 ipcMain.on("openExternalLink", (event, linkref) => {
   shell.openExternal(linkref);
 });
 
+// Reload without cache
 ipcMain.on("reloadWithoutCache", () => {
   homeWindow.webContents.reloadIgnoringCache();
 });
 
+// Handle automatic switch to beta for Silver-Smok customers
 ipcMain.on("changeToBeta", async (event, customerName) => {
+  // Automatically switch to beta channel for Silver-Smok customers
+  // unless forced to stay on prod environment (e.g. when user manually switched to prod)
   if (
-    channelSelected.toString() === "0" &&
+    selectedChannel === "0" &&
     customerName === "Silver-Smok" &&
     !forceProdEnv
   ) {
-    channelSelected = 1;
+    const currentSession = session.defaultSession;
 
-    await session.defaultSession.cookies.remove(
-      "https://app.silver-smok.com/",
-      "channel"
-    );
-    await session.defaultSession.cookies.set({
-      url: "https://beta.app.silver-smok.com/",
-      name: "channel",
-      value: channelSelected.toString(),
+    // Clear channel related cookies
+    await currentSession.clearStorageData({
+      storages: ["cookies"],
     });
 
-    homeWindow.loadURL(channelUrls[channelSelected]);
+    // Clear Firebase IndexedDB to avoid auth issues when switching channels
+    await homeWindow.webContents.executeJavaScript(
+      `indexedDB.deleteDatabase('firebaseLocalStorageDb');`
+    );
+
+    // Switch channel and set cookie
+    selectedChannel = "1";
+    await currentSession.cookies.set({
+      url: CHANNELS[selectedChannel],
+      name: "channel",
+      value: selectedChannel,
+    });
+
+    // Reload app with new channel
+    homeWindow.loadURL(CHANNELS[selectedChannel]);
   }
 });
