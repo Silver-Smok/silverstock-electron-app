@@ -6,10 +6,10 @@ contextBridge.exposeInMainWorld("electron", {
   features: {
     autoUpdater: true,
     clientInfo: true,
-    forceBeta: true
+    forceBeta: true,
   },
   openExternalLink(linkref) {
-    ipcRenderer.send('openExternalLink', linkref)
+    ipcRenderer.send("openExternalLink", linkref);
   },
   getAppVersion() {
     return new Promise((resolve) => {
@@ -24,19 +24,6 @@ contextBridge.exposeInMainWorld("electron", {
       ipcRenderer.send("getAppVersion");
     });
   },
-  getClientInformations() {
-    return new Promise((resolve) => {
-      ipcRenderer.once("clientInformations", (event, macAddress, hostname, electronVersion) => {
-        const data = {
-          macAddress: macAddress,
-          hostname: hostname,
-          electronVersion: electronVersion
-        }
-        resolve(data);
-      });
-      ipcRenderer.send("getClientInformations");
-    });
-  },
   switchAppChannel() {
     ipcRenderer.send("switchAppChannel");
   },
@@ -44,9 +31,9 @@ contextBridge.exposeInMainWorld("electron", {
     return new Promise((resolve) => {
       ipcRenderer.once("appChannel", (event, appChannel) => {
         resolve(appChannel);
-      })
+      });
       ipcRenderer.send("getAppChannel");
-    })
+    });
   },
   updateApp() {
     ipcRenderer.send("updateApp");
@@ -72,5 +59,5 @@ contextBridge.exposeInMainWorld("electron", {
   },
   changeToBeta(companyName) {
     ipcRenderer.send("changeToBeta", companyName);
-  }
+  },
 });
