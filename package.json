@@ -4,7 +4,7 @@
   "description": "SilverStock electron app",
   "main": "main.js",
   "scripts": {
-    "dev": "NODE_ENV=development electron .",
+    "dev": "nodemon --watch main.js --watch preload.cjs --exec \"electron .\"",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "source .env && electron-forge make",
@@ -22,8 +22,11 @@
     "@electron-forge/maker-zip": "7.2.0",
     "@electron-forge/plugin-auto-unpack-natives": "7.2.0",
     "@electron-forge/publisher-github": "7.2.0",
+    "concurrently": "^9.2.1",
     "dotenv": "16.3.1",
-    "electron": "32.1.2"
+    "electron": "32.1.2",
+    "nodemon": "^3.1.10",
+    "wait-on": "^9.0.1"
   },
   "dependencies": {
     "electron-context-menu": "3.6.1",

@@ -28,6 +28,8 @@ const channelUrls = [
 let channelSelected = 0;
 let forceProdEnv = false;
 
+console.log("omg");
+
 log.initialize();
 
 const startUpdater = () => {
@@ -344,6 +346,7 @@ ipcMain.on("getBadgeCount", () => {
 });
 
 ipcMain.on("switchAppChannel", async () => {
+  console.log(session.defaultSession);
   const prodCookies = await session.defaultSession.cookies.get({
     url: "https://app.silver-smok.com/",
   });
