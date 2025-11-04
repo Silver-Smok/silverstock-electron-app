@@ -1,5 +1,4 @@
 if (require("electron-squirrel-startup")) return;
-require("dotenv").config();
 const electron = require("electron");
 const {
   BrowserWindow,
@@ -18,7 +17,6 @@ require("electron-context-menu");
 const log = require("electron-log/main");
 
 const IS_DARWIN = process.platform === "darwin";
-const DEV_URL = "http://localhost:3000";
 const PROD_URL = "https://app.silver-smok.com/";
 const BETA_URL = "https://beta.app.silver-smok.com/";
 const CHANNELS = {
@@ -312,12 +310,7 @@ async function createWindow() {
     });
   }
 
-  const url =
-    process.env.NODE_ENV === "development"
-      ? DEV_URL
-      : CHANNELS[selectedChannel];
-
-  homeWindow.loadURL(url);
+  homeWindow.loadURL(CHANNELS[selectedChannel]);
   homeWindow.on("show", function () {
     mainWindowState.manage(homeWindow);
   });
